@@ -5,6 +5,7 @@ import {
   Card,
   CardMedia,
   Typography,
+  Grow,
 } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import Color from 'color'
@@ -68,16 +69,18 @@ const GameCategory = ({ categorySection, categories }) => {
     >
       {categories.map((c) =>
         c?.category === categorySection ? (
-          <Grid key={c?._id} item xs={4} sm={3} lg={2}>
-            <ActionArea>
-              <MyCard>
-                <Link to={`/etalase/${c?.name}`}>
-                  <Media component='img' image={c?.image} title={c?.name} />
-                </Link>
-              </MyCard>
-            </ActionArea>
-            <AppName spacing={{ xs: 0.5, sm: 1, md: 3 }}>{c.name}</AppName>
-          </Grid>
+          <Grow in>
+            <Grid key={c?._id} item xs={4} sm={3} lg={2}>
+              <ActionArea>
+                <MyCard>
+                  <Link to={`/etalase/${c?.name}`}>
+                    <Media component='img' image={c?.image} title={c?.name} />
+                  </Link>
+                </MyCard>
+              </ActionArea>
+              <AppName spacing={{ xs: 0.5, sm: 1, md: 3 }}>{c.name}</AppName>
+            </Grid>
+          </Grow>
         ) : null
       )}
     </MyContainer>
