@@ -9,7 +9,7 @@ const MyBox = styled(Box)(({ theme }) => ({
   height: '280px',
   backgroundColor: '#363636',
   [theme.breakpoints.down('sm')]: {
-    m: 1,
+    marginRight: '15px',
     height: '138px',
     width: '350px',
   },
@@ -40,7 +40,7 @@ const HomeLoading = () => {
 
   return (
     <Grow in>
-      <Container maxWidth='lg' sx={{ paddingLeft: 0, paddingRight: 0 }}>
+      <Container maxWidth='lg' sx={{ paddingLeft: 1.8, paddingRight: 0 }}>
         <Grid
           container
           justifyContent='space-between'

@@ -99,7 +99,7 @@ const InputID = ({ category, productData, setProductData }) => {
               id='server'
               required='true'
               options={category.server}
-              getOptionLabel={(option) => option.toString()}
+              getOptionLabel={(option) => option}
               getOptionSelected={(option, value) =>
                 option.category === value.category
               }

@@ -67,12 +67,12 @@ const GameCategory = ({ categorySection, categories }) => {
       columnSpacing={{ xs: 2, sm: 3, md: 4 }}
     >
       {categories.map((c) =>
-        c.category === categorySection ? (
-          <Grid key={c._id} item xs={4} sm={3} lg={2}>
+        c?.category === categorySection ? (
+          <Grid key={c?._id} item xs={4} sm={3} lg={2}>
             <ActionArea>
               <MyCard>
-                <Link to={`/etalase/${c.name}`}>
-                  <Media component='img' image={c.image} title={c.name} />
+                <Link to={`/etalase/${c?.name}`}>
+                  <Media component='img' image={c?.image} title={c?.name} />
                 </Link>
               </MyCard>
             </ActionArea>

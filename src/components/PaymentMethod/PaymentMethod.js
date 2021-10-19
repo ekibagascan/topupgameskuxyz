@@ -130,7 +130,7 @@ const PaymentMethod = ({ product, currentId, productData, setProductData }) => {
                 sx={{ display: 'flex' }}
               >
                 <Grid item xs={8} sx={{ margin: 'auto' }}>
-                  <PayLogo alt={payment.name} src={payment.image} />
+                  <PayLogo alt={payment?.name} src={payment?.image} />
                 </Grid>
 
                 <Grid item xs={4} sx={{ margin: 'auto', textAlign: 'end' }}>
