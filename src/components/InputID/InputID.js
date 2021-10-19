@@ -1,0 +1,135 @@
+import React from 'react'
+import { Paper, Typography, TextField, Grid, Autocomplete } from '@mui/material'
+import { styled } from '@mui/material/styles'
+import NumberFormat from 'react-number-format'
+
+const MyPaper = styled(Paper)(() => ({
+  width: '100%',
+  marginBottom: '20px',
+}))
+
+const Title = styled(Typography)(({ theme }) => ({
+  paddingTop: 15,
+  paddingLeft: 17,
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '0.9rem',
+    fontWeight: 550,
+  },
+}))
+const HelperText = styled(Typography)(({ theme }) => ({
+  [theme.breakpoints.down('sm')]: {
+    padding: '0px 15px',
+  },
+}))
+const InputField = styled(TextField)(({ theme }) => ({
+  [theme.breakpoints.down('sm')]: {
+    '& label': {
+      fontSize: '0.9rem',
+    },
+  },
+}))
+
+const InputContainer = styled(Grid)(() => ({
+  display: 'flex',
+  padding: '20px 5px',
+}))
+
+const InputForm = styled(Grid)(() => ({
+  display: 'flex',
+  paddingBottom: 5,
+}))
+
+const ServerList = styled(Autocomplete)(() => ({
+  marginLeft: 10,
+  width: '30%',
+}))
+
+const InputID = ({ category, productData, setProductData }) => {
+  if (!category || category.form === 'none') return null
+
+  return (
+    <MyPaper key={category._id} elevation={1}>
+      <Title variant='h6'>1. {category.title}</Title>
+      <InputContainer container alignItems='stretch' spacing={{ xs: 1, md: 3 }}>
+        <InputForm item xs={12}>
+          <InputField
+            name='id'
+            id='outlined-error-helper-text'
+            required={true}
+            variant='outlined'
+            label={category.title}
+            width='70%'
+            sx={{ margin: 'auto 5px' }}
+            value={productData.playerId}
+            onChange={(e) =>
+              setProductData({
+                ...productData,
+                playerId: e.target.value,
+              })
+            }
+          />
+          {category.form === 'double' ? (
+            <InputField
+              name='zoneid'
+              id='outlined-error-helper-text'
+              required={true}
+              variant='outlined'
+              label={category.subtitle}
+              width='70%'
+              sx={{ margin: 'auto 5px' }}
+              value={productData.zoneId}
+              onChange={(e) =>
+                setProductData({
+                  ...productData,
+                  zoneId: e.target.value,
+                })
+              }
+            >
+              {' '}
+              <NumberFormat
+                format='(#####)'
+                mask='_'
+                allowEmptyFormatting={true}
+                displayType='input'
+              />{' '}
+            </InputField>
+          ) : null}
+          {category.form === 'doubleServer' ? (
+            <ServerList
+              id='server'
+              required='true'
+              options={category.server}
+              getOptionLabel={(option) => option.toString()}
+              getOptionSelected={(option, value) =>
+                option.category === value.category
+              }
+              onChange={(e, value) =>
+                setProductData({ ...productData, server: value })
+              }
+              value={productData.server}
+              renderInput={(params) => (
+                <InputField
+                  {...params}
+                  name='category'
+                  label={category.subtitle}
+                  variant='outlined'
+                />
+              )}
+            />
+          ) : null}
+        </InputForm>
+        <HelperText
+          sx={{
+            fontSize: '0.6rem',
+            padding: '0px 30px',
+          }}
+        >
+          Harap Cek kembali ID Anda sebelum order. (Kesalahan ID bukan tanggung
+          jawab kami)
+        </HelperText>
+      </InputContainer>
+    </MyPaper>
+  )
+}
+
+export default InputID

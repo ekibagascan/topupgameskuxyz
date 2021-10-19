@@ -1,0 +1,75 @@
+const payments = [
+  {
+    _id: '1',
+    name: 'GoPay',
+    country: ['id'],
+    discount: 5,
+    max: 50000,
+    image: '/images/gopay.svg',
+  },
+  {
+    _id: '2',
+    name: 'Ovo',
+    country: ['id'],
+    discount: 5,
+    image: '/images/ovo.svg',
+  },
+  {
+    _id: '3',
+    name: 'Dana',
+    country: ['id'],
+    discount: 5,
+    image: '/images/dana.svg',
+  },
+  {
+    _id: '4',
+    name: 'ShopeePay',
+    country: ['id'],
+    discount: 5,
+    image: '/images/shopeepay.svg',
+  },
+  {
+    _id: '5',
+    name: 'LinkAja',
+    country: ['id'],
+    discount: 0,
+    image: '/images/linkaja.svg',
+  },
+  {
+    _id: '6',
+    name: 'Doku',
+    country: ['id'],
+    discount: 0,
+    image: '/images/doku.svg',
+  },
+  {
+    _id: '7',
+    name: 'BCA',
+    country: ['id'],
+    discount: 0,
+    image: '/images/bca.svg',
+  },
+  {
+    _id: '8',
+    name: 'Jenius',
+    country: ['id'],
+    discount: 0,
+    image: '/images/jenius.svg',
+  },
+  {
+    _id: '9',
+    name: 'Livin',
+    country: ['id'],
+    discount: 0,
+    image: '/images/livin.png',
+  },
+  {
+    _id: '10',
+    name: 'BNI',
+    country: ['id'],
+    discount: 0,
+    image: '/images/bni.png',
+  },
+]
+
+export default payments
