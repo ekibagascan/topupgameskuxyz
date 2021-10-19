@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Grid, Container, Typography } from '@mui/material'
 import { useSelector, useDispatch } from 'react-redux'
 
-import HomeLoading from '../../components/Loading/HomeLoading'
 import { getAllSlides } from '../../actions/slides'
 import { getAllCategories } from '../../actions/categories'
 import SlideShow from '../../components/SlideShow/SlideShow'
@@ -38,9 +37,7 @@ const Home = () => {
 
   if (!categories) return null
 
-  return isLoading ? (
-    <HomeLoading />
-  ) : (
+  return (
     <Container maxWidth='lg' sx={{ paddingLeft: 0, paddingRight: 0 }}>
       <Grid
         container
@@ -56,40 +53,41 @@ const Home = () => {
         <SlideShow slides={slides} />
 
         <Grid>
-          <Typography
-            variant='h6'
-            sx={{ color: '#fff', marginBottom: '8px', marginTop: '5px' }}
-          >
-            Trending
-          </Typography>
-
+          {isLoading ? null : (
+            <Typography
+              variant='h6'
+              sx={{ color: '#fff', marginBottom: '8px', marginTop: '5px' }}
+            >
+              Trending
+            </Typography>
+          )}
           <GameCategory categories={categories} categorySection='trending' />
-
-          <Typography
-            variant='h6'
-            sx={{ color: '#fff', marginBottom: '8px', marginTop: '20px' }}
-          >
-            Top Games
-          </Typography>
-
+          {isLoading ? null : (
+            <Typography
+              variant='h6'
+              sx={{ color: '#fff', marginBottom: '8px', marginTop: '20px' }}
+            >
+              Top Games
+            </Typography>
+          )}
           <GameCategory categories={categories} categorySection='topgames' />
-
-          <Typography
-            variant='h6'
-            sx={{ color: '#fff', marginBottom: '8px', marginTop: '20px' }}
-          >
-            Livestream App
-          </Typography>
-
+          {isLoading ? null : (
+            <Typography
+              variant='h6'
+              sx={{ color: '#fff', marginBottom: '8px', marginTop: '20px' }}
+            >
+              Livestream App
+            </Typography>
+          )}
           <GameCategory categories={categories} categorySection='livestream' />
-
-          <Typography
-            variant='h6'
-            sx={{ color: '#fff', marginBottom: '8px', marginTop: '20px' }}
-          >
-            Voucher Games
-          </Typography>
-
+          {isLoading ? null : (
+            <Typography
+              variant='h6'
+              sx={{ color: '#fff', marginBottom: '8px', marginTop: '20px' }}
+            >
+              Voucher Games
+            </Typography>
+          )}
           <GameCategory categories={categories} categorySection='voucher' />
         </Grid>
       </Grid>

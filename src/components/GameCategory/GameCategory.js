@@ -28,7 +28,7 @@ const ActionArea = styled(CardActionArea)(({ theme }) => ({
 }))
 const MyCard = styled(Card)(({ color, theme }) => ({
   borderRadius: '10px',
-  boxShadow: `rgba(255, 255, 255, 0.25) 0px 2px 8px`,
+  boxShadow: `rgba(0, 0, 0, 0.25) 0px 2px 8px`,
   '&:hover': {
     boxShadow: `-3px 3px 5px 0 ${Color(color)
       .rotate(-12)
@@ -47,6 +47,7 @@ const Media = styled(CardMedia)(({ theme }) => ({
     width: '90px',
   },
 }))
+
 const AppName = styled(Typography)(({ theme }) => ({
   color: '#fff',
   marginTop: '5px',
