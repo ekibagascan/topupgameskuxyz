@@ -124,8 +124,8 @@ const InputID = ({ category, productData, setProductData }) => {
             padding: '0px 30px',
           }}
         >
-          Harap Cek kembali ID Anda sebelum order. (Kesalahan ID bukan tanggung
-          jawab kami)
+          {category.instruction}. Harap Cek kembali ID Anda sebelum order.
+          (Kesalahan ID bukan tanggung jawab kami)
         </HelperText>
       </InputContainer>
     </MyPaper>
