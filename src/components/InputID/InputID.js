@@ -149,7 +149,7 @@ const InputID = ({ category, productData, setProductData }) => {
             label={category.operationTime}
             variant='contained'
             size='small'
-            sx={{ margin: '8px 0px auto 8px' }}
+            sx={{ margin: '8px 0px auto 5px' }}
           />
         </Grid>
       </InputContainer>
