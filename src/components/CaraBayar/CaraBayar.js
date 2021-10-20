@@ -1,6 +1,7 @@
 import React from 'react'
 import { Dialog, DialogContent, Box, Grid } from '@mui/material'
 import { styled } from '@mui/material/styles'
+import carabayar from '../../assets/images/carabayar1hape.jpg'
 
 const ImageGuide = styled('img')(({ theme }) => ({
   width: '540px',
@@ -23,7 +24,7 @@ const CaraBayar = ({ enter, handleCloseEnter }) => {
           textAlign={'center'}
         >
           <Grid justifyContent='center' sx={{ textAlign: 'center' }}>
-            <ImageGuide alt='carabayarqris' src='/images/carabayar1hape.jpg' />
+            <ImageGuide alt='carabayarqris' src={carabayar} />
           </Grid>
         </Box>
       </DialogContent>

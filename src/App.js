@@ -6,6 +6,7 @@ import Header from './components/Header/Header'
 import Home from './screens/Home/Home'
 import Etalase from './screens/Etalase/Etalase'
 import PaymentScreen from './screens/PaymentScreen/PaymentScreen'
+import Footer from './components/Footer/Footer'
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
             <Route path='/' exact component={Home} />
             <Route path='/etalase/:name' exact component={Etalase} />
             <Route path='/etalase/order/:id' exact component={PaymentScreen} />
+            <Footer />
           </>
         </Switch>
       </Container>

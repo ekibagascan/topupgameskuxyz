@@ -1,7 +1,10 @@
 import React from 'react'
-import { AppBar, Link } from '@mui/material'
+import { AppBar } from '@mui/material'
 import { styled } from '@mui/material/styles'
-// import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+
+import ProductHunt from '../ProductHunt/ProductHunt'
+import topupgameskubrand from '../../assets/images/topupgamekubrand.svg'
 
 const Grow = styled('div')(() => ({
   flexGrow: 1,
@@ -32,39 +35,15 @@ const BrandContainer = styled(Link)(() => ({
   alignItems: 'center',
   marginLeft: '15px',
 }))
-const ProductHunt = styled('img')(({ theme }) => ({
-  width: '250px',
-  height: '34px',
-  margin: 'auto 0px',
-  [theme.breakpoints.down('sm')]: {
-    height: '24px',
-  },
-}))
 
 const Header = () => {
   return (
     <Grow>
       <MyAppBar id='app-bar' position='fixed'>
-        <BrandContainer href='/'>
-          <Brand
-            src='/images/topupgamekubrand.svg'
-            alt='topupgameku'
-            align='center'
-          />
+        <BrandContainer to={'/'}>
+          <Brand src={topupgameskubrand} alt='topupgameku' align='center' />
         </BrandContainer>
-        <Link
-          href='https://www.producthunt.com/posts/topupgamesku?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-topupgamesku'
-          target='_blank'
-          rel='noreferrer'
-          color='inherit'
-          underline='none'
-        >
-          <ProductHunt
-            src='https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=316641&theme=dark'
-            alt='Topupgamesku - The cheapest, easiest and most trusted game center payment | Product Hunt'
-          />
-        </Link>
-        <Grow />
+        <ProductHunt />
       </MyAppBar>
     </Grow>
   )

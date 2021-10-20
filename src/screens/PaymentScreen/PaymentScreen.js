@@ -21,6 +21,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import NumberFormat from 'react-number-format'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 
+import qrisku from '../../assets/images/qrisku.png'
+import paid from '../../assets/images/PAID.svg'
+import check from '../../assets/images/checklist.svg'
+import wa from '../../assets/images/wa.svg'
 import CaraBayar from '../../components/CaraBayar/CaraBayar'
 import payments from '../../components/payments'
 import { getOrder } from '../../actions/orders'
@@ -353,20 +357,16 @@ const PaymentScreen = () => {
                         </Typography>
                         {order.isDelivered && order.isPaid ? (
                           <ImageListItem sx={{ width: '80px' }}>
-                            <img
-                              alt='successfull'
-                              src='/images/checklist.svg'
-                              loading='lazy'
-                            />
+                            <img alt='successfull' src={check} loading='lazy' />
                           </ImageListItem>
                         ) : order.isPaid ? (
                           <ImageListItem sx={{ width: '80px' }}>
-                            <img alt='paid' src='/images/PAID.svg' />
+                            <img alt='paid' src={paid} />
                           </ImageListItem>
                         ) : (
                           <QRCode
                             alt='qris'
-                            src='/images/qrisku.png'
+                            src={qrisku}
                             height='250px'
                             loading='lazy'
                           />
@@ -456,11 +456,7 @@ const PaymentScreen = () => {
                         sx={{ display: 'flex', flexDirection: 'row' }}
                       >
                         <IconButton>
-                          <img
-                            alt='whatsapp'
-                            src='/images/wa.svg'
-                            height='20px'
-                          />
+                          <img alt='whatsapp' src={wa} height='20px' />
                         </IconButton>
                         <Typography
                           sx={{

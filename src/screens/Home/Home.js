@@ -61,6 +61,7 @@ const Home = () => {
               Trending
             </Typography>
           )}
+
           <GameCategory categories={categories} categorySection='trending' />
           {isLoading ? null : (
             <Typography
