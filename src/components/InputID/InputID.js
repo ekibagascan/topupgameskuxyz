@@ -143,13 +143,15 @@ const InputID = ({ category, productData, setProductData }) => {
           {category.instruction}. Harap Cek kembali ID Anda sebelum order.
           (Kesalahan ID bukan tanggung jawab kami)
         </HelperText>
-        <Info>Jam Operasional:</Info>
-        <Chip
-          label={category.operationTime}
-          variant='contained'
-          size='small'
-          sx={{ margin: '5px 0px auto 5px' }}
-        />
+        <Grid sx={{ display: 'flex' }}>
+          <Info>Jam Operasional:</Info>
+          <Chip
+            label={category.operationTime}
+            variant='contained'
+            size='small'
+            sx={{ margin: '8px 0px auto 8px' }}
+          />
+        </Grid>
       </InputContainer>
     </MyPaper>
   )
