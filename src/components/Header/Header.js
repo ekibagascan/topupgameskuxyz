@@ -21,10 +21,10 @@ const MyAppBar = styled(AppBar)(({ theme }) => ({
 }))
 const Brand = styled('img')(({ theme }) => ({
   margin: '2px 20px 2px 20px',
-  height: 20,
-  [theme.breakpoints.down('xs')]: {
-    margin: '2px 20px 2px auto',
-    height: 15,
+  height: 30,
+  [theme.breakpoints.down('sm')]: {
+    margin: '2px auto',
+    height: 25,
   },
 }))
 const BrandContainer = styled(Link)(() => ({
