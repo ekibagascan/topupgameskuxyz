@@ -136,6 +136,8 @@ const PaymentMethod = ({ product, currentId, productData, setProductData }) => {
                 <Grid item xs={4} sx={{ margin: 'auto', textAlign: 'end' }}>
                   {product?._id === currentId ? (
                     <Price sx={{ margin: 'auto' }}>
+                      {' '}
+                      Harga:{' '}
                       <NumberFormat
                         value={
                           !payment.discount || product.price >= payment.max
@@ -143,7 +145,7 @@ const PaymentMethod = ({ product, currentId, productData, setProductData }) => {
                             : handleFinalPrice()
                         }
                         displayType='text'
-                        thousandSeparator={true}
+                        thousandSeparator='.'
                         prefix='Rp.'
                         mask=''
                         allowLeadingZeros={false}
@@ -151,7 +153,7 @@ const PaymentMethod = ({ product, currentId, productData, setProductData }) => {
                         fixedDecimalScale={false}
                         isNumericString={false}
                         allowNegative={true}
-                        decimalSeparator='.'
+                        decimalSeparator=','
                       />
                     </Price>
                   ) : null}

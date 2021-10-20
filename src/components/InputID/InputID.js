@@ -1,5 +1,12 @@
 import React from 'react'
-import { Paper, Typography, TextField, Grid, Autocomplete } from '@mui/material'
+import {
+  Paper,
+  Typography,
+  TextField,
+  Grid,
+  Autocomplete,
+  Chip,
+} from '@mui/material'
 import { styled } from '@mui/material/styles'
 import NumberFormat from 'react-number-format'
 
@@ -18,6 +25,15 @@ const Title = styled(Typography)(({ theme }) => ({
 }))
 const HelperText = styled(Typography)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
+    padding: '0px 15px',
+  },
+}))
+const Info = styled(Typography)(({ theme }) => ({
+  fontSize: '0.8rem',
+  fontWeight: 500,
+  margin: '8px 0px auto 30px',
+  [theme.breakpoints.down('sm')]: {
+    margin: '8px 0px auto 0px',
     padding: '0px 15px',
   },
 }))
@@ -127,6 +143,13 @@ const InputID = ({ category, productData, setProductData }) => {
           {category.instruction}. Harap Cek kembali ID Anda sebelum order.
           (Kesalahan ID bukan tanggung jawab kami)
         </HelperText>
+        <Info>Jam Operasional:</Info>
+        <Chip
+          label={category.operationTime}
+          variant='contained'
+          size='small'
+          sx={{ margin: '5px 0px auto 5px' }}
+        />
       </InputContainer>
     </MyPaper>
   )
