@@ -9,7 +9,7 @@ function Copyright() {
       sx={{ textAlign: 'center', color: '#fff' }}
     >
       {'Copyright © '}
-      <Link href='https://remotenft.xyz/'>RemoteNFT</Link>{' '}
+      <Link href='https://topupgamesku.xyz/'>Topupgamesku</Link>{' '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
