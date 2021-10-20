@@ -31,13 +31,14 @@ const HelperText = styled(Typography)(({ theme }) => ({
 const Info = styled(Typography)(({ theme }) => ({
   fontSize: '0.8rem',
   fontWeight: 500,
-  margin: '8px 0px auto 30px',
+  margin: '9px 0px auto 30px',
   [theme.breakpoints.down('sm')]: {
-    margin: '8px 0px auto 0px',
+    margin: '9px 0px auto 0px',
     padding: '0px 15px',
   },
 }))
 const InputField = styled(TextField)(({ theme }) => ({
+  width: '50%',
   [theme.breakpoints.down('sm')]: {
     '& label': {
       fontSize: '0.9rem',
@@ -56,10 +57,18 @@ const InputForm = styled(Grid)(() => ({
 }))
 
 const ServerList = styled(Autocomplete)(() => ({
-  marginLeft: 10,
-  width: '30%',
+  marginLeft: 8,
+  width: '40%',
 }))
 
+const InputServer = styled(TextField)(({ theme }) => ({
+  width: '100%',
+  [theme.breakpoints.down('sm')]: {
+    '& label': {
+      fontSize: '0.9rem',
+    },
+  },
+}))
 const InputID = ({ category, productData, setProductData }) => {
   if (!category || category.form === 'none') return null
 
@@ -74,7 +83,6 @@ const InputID = ({ category, productData, setProductData }) => {
             required={true}
             variant='outlined'
             label={category.title}
-            width='70%'
             sx={{ margin: 'auto 5px' }}
             value={productData.playerId}
             onChange={(e) =>
@@ -124,7 +132,7 @@ const InputID = ({ category, productData, setProductData }) => {
               }
               value={productData.server}
               renderInput={(params) => (
-                <InputField
+                <InputServer
                   {...params}
                   name='category'
                   label={category.subtitle}
