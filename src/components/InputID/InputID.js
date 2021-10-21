@@ -80,7 +80,6 @@ const InputID = ({ category, productData, setProductData }) => {
           <InputField
             name='id'
             id='outlined-error-helper-text'
-            required={true}
             variant='outlined'
             label={category.title}
             sx={{ margin: 'auto 5px' }}
@@ -96,7 +95,6 @@ const InputID = ({ category, productData, setProductData }) => {
             <InputField
               name='zoneid'
               id='outlined-error-helper-text'
-              required={true}
               variant='outlined'
               label={category.subtitle}
               width='70%'
@@ -121,7 +119,6 @@ const InputID = ({ category, productData, setProductData }) => {
           {category.form === 'doubleServer' ? (
             <ServerList
               id='server'
-              required='true'
               options={category.server}
               getOptionLabel={(option) => option}
               getOptionSelected={(option, value) =>
