@@ -352,9 +352,11 @@ const PaymentScreen = () => {
                         xs={12}
                         sx={{ marginTop: '20px', textAlign: 'center' }}
                       >
-                        <Typography variant='h6' sx={{ fontWeight: 800 }}>
-                          TOPUPGAMESKU
-                        </Typography>
+                        {!order.isPaid ? (
+                          <Typography variant='h6' sx={{ fontWeight: 800 }}>
+                            TOPUPGAMESKU
+                          </Typography>
+                        ) : null}
                         {order.isDelivered && order.isPaid ? (
                           <ImageListItem sx={{ width: '80px' }}>
                             <img alt='successfull' src={check} loading='lazy' />
@@ -374,50 +376,54 @@ const PaymentScreen = () => {
                       </Grid>
                     ) : null
                   )}
-                  <NominalOrder
-                    sx={{
-                      fontWeight: 600,
-                      color: '#000',
-                      textAlign: 'center',
-                    }}
-                  >
-                    <CopyToClipboard
-                      onCopy={() => setCopied(true)}
-                      text={order.totalPrice}
-                    >
-                      <IconButton color='primary' onClick={handleClick}>
-                        <ContentCopyIcon size='small' />
-                      </IconButton>
-                    </CopyToClipboard>
+                  {!order.isPaid ? (
+                    <Grid>
+                      <NominalOrder
+                        sx={{
+                          fontWeight: 600,
+                          color: '#000',
+                          textAlign: 'center',
+                        }}
+                      >
+                        <CopyToClipboard
+                          onCopy={() => setCopied(true)}
+                          text={order.totalPrice}
+                        >
+                          <IconButton color='primary' onClick={handleClick}>
+                            <ContentCopyIcon size='small' />
+                          </IconButton>
+                        </CopyToClipboard>
 
-                    <NumberFormat
-                      value={order.totalPrice}
-                      displayType='text'
-                      thousandSeparator='.'
-                      prefix='Rp.'
-                      mask=''
-                      allowLeadingZeros={false}
-                      allowEmptyFormatting={false}
-                      fixedDecimalScale={false}
-                      isNumericString={false}
-                      allowNegative={true}
-                      decimalSeparator=','
-                    />
-                  </NominalOrder>
-                  <Typography
-                    color='primary'
-                    sx={{
-                      fontWeight: 500,
-                      marginTop: '5px',
-                    }}
-                    onClick={handleClickEnter}
-                  >
-                    Cara Bayar
-                  </Typography>
-                  <CaraBayar
-                    enter={enter}
-                    handleCloseEnter={handleCloseEnter}
-                  />
+                        <NumberFormat
+                          value={order.totalPrice}
+                          displayType='text'
+                          thousandSeparator='.'
+                          prefix='Rp.'
+                          mask=''
+                          allowLeadingZeros={false}
+                          allowEmptyFormatting={false}
+                          fixedDecimalScale={false}
+                          isNumericString={false}
+                          allowNegative={true}
+                          decimalSeparator=','
+                        />
+                      </NominalOrder>
+                      <Typography
+                        color='primary'
+                        sx={{
+                          fontWeight: 500,
+                          marginTop: '5px',
+                        }}
+                        onClick={handleClickEnter}
+                      >
+                        Cara Bayar
+                      </Typography>
+                      <CaraBayar
+                        enter={enter}
+                        handleCloseEnter={handleCloseEnter}
+                      />
+                    </Grid>
+                  ) : null}
                   <Typography
                     sx={{
                       fontWeight: 500,
