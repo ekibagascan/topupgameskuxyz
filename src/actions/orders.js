@@ -1,32 +1,32 @@
-import * as api from '../api'
+import * as api from "../api";
 import {
   CREATE_ORDER,
   GET_ORDER,
   START_LOADING,
   END_LOADING,
-} from '../constants/actionTypes'
+} from "../constants/actionTypes";
 
 export const createOrder = (order, history) => async (dispatch) => {
   try {
-    dispatch({ type: START_LOADING })
-    const { data } = await api.createOrder(order)
+    dispatch({ type: START_LOADING });
+    const { data } = await api.createOrder(order);
 
-    dispatch({ type: CREATE_ORDER, payload: data })
-    history.push(`/etalase/order/${data._id}`)
+    dispatch({ type: CREATE_ORDER, payload: data });
+    history.replace(`/etalase/${data.category}/order/pay/${data._id}`);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
 export const getOrder = (id) => async (dispatch) => {
   try {
-    dispatch({ type: START_LOADING })
+    dispatch({ type: START_LOADING });
 
-    const { data } = await api.fetchOrder(id)
+    const { data } = await api.fetchOrder(id);
 
-    dispatch({ type: GET_ORDER, payload: { order: data } })
-    dispatch({ type: END_LOADING })
+    dispatch({ type: GET_ORDER, payload: { order: data } });
+    dispatch({ type: END_LOADING });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};

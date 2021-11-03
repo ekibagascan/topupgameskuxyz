@@ -1,94 +1,94 @@
-import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useParams, useHistory } from 'react-router-dom'
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams, useHistory } from "react-router-dom";
 import {
   Grow,
   Grid,
   Container,
   Backdrop,
   CircularProgress,
-} from '@mui/material'
-import { styled } from '@mui/material/styles'
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
 
-import InputID from '../../components/InputID/InputID'
-import Nominals from '../../components/Nominals/Nominals'
-import OptionalForm from '../../components/OptionalForm/OptionalForm'
-import { getCategory } from '../../actions/categories'
-import { getProducts } from '../../actions/products'
-import { createOrder } from '../../actions/orders'
+import InputID from "../../components/InputID/InputID";
+import Nominals from "../../components/Nominals/Nominals";
+import OptionalForm from "../../components/OptionalForm/OptionalForm";
+import { getCategory } from "../../actions/categories";
+import { getProducts } from "../../actions/products";
+import { createOrder } from "../../actions/orders";
 
 const MainContainer = styled(Container)(() => ({
-  marginTop: '80px',
+  marginTop: "80px",
   paddingLeft: 0,
   paddingRight: 0,
-}))
+}));
 const GridContainer = styled(Grid)(() => ({
-  marginTop: '50px',
-  display: 'flex',
-  justifyContent: 'space-between',
-}))
+  marginTop: "50px",
+  display: "flex",
+  justifyContent: "space-between",
+}));
 const GridEtalase = styled(Grid)(() => ({
-  alignItems: 'center',
-  display: 'flex',
-}))
-const MyForm = styled('form')(() => ({}))
+  alignItems: "center",
+  display: "flex",
+}));
+const MyForm = styled("form")(() => ({}));
 
 const initialState = {
-  playerId: '',
-  zoneId: '',
-  server: '',
-  productName: '',
-  totalPrice: '',
-  paymentMethod: '',
-  category: '',
-  emailorPhone: '',
-}
+  playerId: "",
+  zoneId: "",
+  server: "",
+  productName: "",
+  totalPrice: "",
+  paymentMethod: "",
+  category: "",
+  emailorPhone: "",
+};
 
 const Etalase = () => {
-  const dispatch = useDispatch()
-  const history = useHistory()
-  const { products } = useSelector((state) => state.products)
-  const { category } = useSelector((state) => state.categories)
-  const [productData, setProductData] = useState(initialState)
-  const { name } = useParams()
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const { products } = useSelector((state) => state.products);
+  const { category } = useSelector((state) => state.categories);
+  const [productData, setProductData] = useState(initialState);
+  const { name } = useParams();
 
   useEffect(() => {
-    dispatch(getCategory(name))
-    dispatch(getProducts(name))
-  }, [dispatch, name])
+    dispatch(getCategory(name));
+    dispatch(getProducts(name));
+  }, [dispatch, name]);
 
-  if (!products) return 'Belum ada produk'
+  if (!products) return "Belum ada produk";
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (productData) {
-      dispatch(createOrder({ ...productData }, history))
+      dispatch(createOrder({ ...productData }, history));
     }
-  }
+  };
 
   if (!category)
     return (
       <Grid>
         <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={true}
         >
-          <CircularProgress color='inherit' />
+          <CircularProgress color="inherit" />
         </Backdrop>
       </Grid>
-    )
+    );
 
   return (
     <Grow in>
-      <MainContainer maxWidth='md'>
+      <MainContainer maxWidth="md">
         <GridContainer
           container
-          justifyContent='center'
-          alignItems='stretch'
+          justifyContent="center"
+          alignItems="stretch"
           spacing={{ xs: 1, sm: 1, md: 3 }}
         >
           <GridEtalase item xs={12}>
-            <MyForm noValidate autoComplete='off' onSubmit={handleSubmit}>
+            <MyForm noValidate autoComplete="off" onSubmit={handleSubmit}>
               <InputID
                 category={category}
                 productData={productData}
@@ -111,7 +111,7 @@ const Etalase = () => {
         </GridContainer>
       </MainContainer>
     </Grow>
-  )
-}
+  );
+};
 
-export default Etalase
+export default Etalase;
