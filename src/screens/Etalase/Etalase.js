@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useHistory } from "react-router-dom";
 import {
@@ -44,18 +44,34 @@ const initialState = {
   emailorPhone: "",
 };
 
+function useIsMounted() {
+  const isMounted = useRef(false);
+  useEffect(() => {
+    isMounted.current = true;
+    return () => (isMounted.current = false);
+  }, []);
+  return isMounted;
+}
+
 const Etalase = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const { name } = useParams();
   const { products } = useSelector((state) => state.products);
   const { category } = useSelector((state) => state.categories);
   const [productData, setProductData] = useState(initialState);
-  const { name } = useParams();
+  const [state, setState] = useState("loading (4 sec)...");
+  const isMounted = useIsMounted();
 
   useEffect(() => {
     dispatch(getCategory(name));
-    dispatch(getProducts(name));
-  }, [dispatch, name]);
+    dispatch(getProducts(name)).then((data) => {
+      if (isMounted.current) {
+        setState(data);
+      }
+      return { state };
+    });
+  }, [dispatch, name, isMounted, state]);
 
   if (!products) return "Belum ada produk";
 

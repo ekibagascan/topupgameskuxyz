@@ -1,7 +1,7 @@
 import * as api from "../api";
 import { EWALLET_CHARGE, START_LOADING } from "../constants/actionTypes";
 
-export const EwalletCharge = (chargeData) => async (dispatch) => {
+export const EWalletCharge = (chargeData) => async (dispatch) => {
   try {
     dispatch({ type: START_LOADING });
 

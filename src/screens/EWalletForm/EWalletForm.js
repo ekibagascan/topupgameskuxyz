@@ -17,7 +17,7 @@ import { useSelector, useDispatch } from "react-redux";
 import NumberFormat from "react-number-format";
 
 import { getOrder } from "../../actions/orders";
-import { EwalletCharge } from "../../actions/e-wallets";
+import { EWalletCharge } from "../../actions/e-wallets";
 import tpg from "../../assets/images/tpg.svg";
 import payments from "../../components/payments";
 
@@ -123,7 +123,7 @@ const EWalletForm = () => {
     });
     e.preventDefault();
     if (chargeData) {
-      dispatch(EwalletCharge({ ...chargeData }));
+      dispatch(EWalletCharge({ ...chargeData }));
     }
   };
 
