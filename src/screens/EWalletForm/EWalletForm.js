@@ -12,7 +12,7 @@ import {
   TextField,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import NumberFormat from "react-number-format";
 
@@ -73,14 +73,14 @@ const NominalOrderList = styled(Typography)(({ theme }) => ({
 
 const EWalletForm = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
+  // const history = useHistory();
   const { order, isLoading } = useSelector((state) => state.orders);
   const { id } = useParams();
   const [chargeData, setChargeData] = useState({
     referenceID: "",
-    currency: "",
+    currency: "IDR",
     amount: "",
-    checkoutMethod: "",
+    checkoutMethod: "ONE_TIME_PAYMENT",
     channelCode: "",
     channelProperties: {
       mobileNumber: "",
@@ -92,8 +92,6 @@ const EWalletForm = () => {
     dispatch(getOrder(id));
   }, [dispatch, id]);
 
-  if (!order) return null;
-
   const handleOvoShopeeInput = (e) => {
     setChargeData({
       ...chargeData,
@@ -104,9 +102,28 @@ const EWalletForm = () => {
   };
 
   const handleSubmit = async (e) => {
+    setChargeData({ ...chargeData, referenceID: order._id });
+    setChargeData({ ...chargeData, amount: order._totalPrice });
+    setChargeData({
+      ...chargeData,
+      channelCode:
+        order.paymentMethod === "Ovo"
+          ? "ID_OVO"
+          : order.paymentMethod === "ShopeePay"
+          ? "ID_SHOPEEPAY"
+          : order.paymentMethod === "Dana"
+          ? "ID_DANA"
+          : "ID_LINKAJA",
+    });
+    setChargeData({
+      ...chargeData,
+      channelProperties: {
+        successRedirectURL: `https://topupgamesku.xyz/etalase/${order.category}/order/${order._id}`,
+      },
+    });
     e.preventDefault();
     if (chargeData) {
-      dispatch(EwalletCharge({ ...chargeData }, history));
+      dispatch(EwalletCharge({ ...chargeData }));
     }
   };
 
