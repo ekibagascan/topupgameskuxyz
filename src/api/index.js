@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "https://9e61-114-79-16-40.ngrok.io" });
+const API = axios.create({ baseURL: "https://topupgamesku.herokuapp.com" });
 
 export const fetchAllSlides = () => API.get(`/api/slides`);
 
