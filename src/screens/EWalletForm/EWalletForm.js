@@ -12,7 +12,7 @@ import {
   TextField,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import NumberFormat from "react-number-format";
 
@@ -73,7 +73,7 @@ const NominalOrderList = styled(Typography)(({ theme }) => ({
 
 const EWalletForm = () => {
   const dispatch = useDispatch();
-  // const history = useHistory();
+  const history = useHistory();
   const { order, isLoading } = useSelector((state) => state.orders);
   const { id } = useParams();
   const [chargeData, setChargeData] = useState({
@@ -127,7 +127,7 @@ const EWalletForm = () => {
             ? "ID_DANA"
             : "ID_LINKAJA",
         channelProperties: {
-          successRedirectURL: `https://topupgamesku.xyz/etalase/${order.category}/order/${order._id}`,
+          successRedirectURL: `https://topupgamesku.xyz/etalase/${order.category}/order/status/${order._id}`,
         },
       });
     }
@@ -136,7 +136,7 @@ const EWalletForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (chargeData) {
-      dispatch(EWalletCharge({ ...chargeData }));
+      dispatch(EWalletCharge({ ...chargeData }, history));
     }
   };
 

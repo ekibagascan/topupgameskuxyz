@@ -15,4 +15,4 @@ export const createOrder = (order) => API.post(`/api/orders`, order);
 export const fetchOrder = (id) => API.get(`/api/orders/order/${id}`);
 
 export const ewalletCharge = (chargeData) =>
-  API.post(`/api/transactions/ewallets/charge`, chargeData);
+  API.post(`https://api.xendit.co/ewallets/charges`, chargeData);
