@@ -97,15 +97,10 @@ const EWalletForm = () => {
       ...chargeData,
       channelProperties: {
         mobileNumber: e.target.value,
+        successRedirectURL: `https://topupgamesku.xyz/etalase/${order.category}/order/${order._id}`,
       },
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    setChargeData({ ...chargeData, referenceID: order._id });
-    setChargeData({ ...chargeData, amount: order._totalPrice });
-    setChargeData({
-      ...chargeData,
+      referenceID: order._id,
+      amount: order.totalPrice,
       channelCode:
         order.paymentMethod === "Ovo"
           ? "ID_OVO"
@@ -115,12 +110,30 @@ const EWalletForm = () => {
           ? "ID_DANA"
           : "ID_LINKAJA",
     });
-    setChargeData({
-      ...chargeData,
-      channelProperties: {
-        successRedirectURL: `https://topupgamesku.xyz/etalase/${order.category}/order/${order._id}`,
-      },
-    });
+  };
+
+  const handleChargeData = () => {
+    if (order.paymentMethod !== "Ovo") {
+      setChargeData({
+        ...chargeData,
+        referenceID: order._id,
+        amount: order._totalPrice,
+        channelCode:
+          order.paymentMethod === "Ovo"
+            ? "ID_OVO"
+            : order.paymentMethod === "ShopeePay"
+            ? "ID_SHOPEEPAY"
+            : order.paymentMethod === "Dana"
+            ? "ID_DANA"
+            : "ID_LINKAJA",
+        channelProperties: {
+          successRedirectURL: `https://topupgamesku.xyz/etalase/${order.category}/order/${order._id}`,
+        },
+      });
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (chargeData) {
       dispatch(EWalletCharge({ ...chargeData }));
@@ -260,20 +273,22 @@ const EWalletForm = () => {
                         </NominalOrderList>
                       </Grid>
                     </Grid>
-
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      fullWidth
-                      color="primary"
-                      sx={{
-                        borderRadius: "15px",
-                        backgroundColor: "#0F00FF",
-                        margin: "15px auto 20px",
-                      }}
-                    >
-                      Lanjut
-                    </Button>
+                    <Grid>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        fullWidth
+                        onClick={handleChargeData}
+                        color="primary"
+                        sx={{
+                          borderRadius: "15px",
+                          backgroundColor: "#0F00FF",
+                          margin: "15px auto 20px",
+                        }}
+                      >
+                        Lanjut
+                      </Button>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Paper>
