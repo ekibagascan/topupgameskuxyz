@@ -17,7 +17,7 @@ import { useSelector, useDispatch } from "react-redux";
 import NumberFormat from "react-number-format";
 
 import { getOrder } from "../../actions/orders";
-import { EWalletCharge, EWalletOvoCharge } from "../../actions/e-wallets";
+import { EWalletsCharge } from "../../actions/e-wallets";
 import tpg from "../../assets/images/tpg.svg";
 import payments from "../../components/payments";
 
@@ -86,8 +86,8 @@ const EWalletForm = () => {
     channel_properties: {
       mobile_number: "",
       success_redirect_url: "",
-      failure_redicect_url: "",
     },
+    category: "",
   });
 
   useEffect(() => {
@@ -105,14 +105,15 @@ const EWalletForm = () => {
       channel_code: "ID_OVO",
       channel_properties: {
         mobile_number: e.target.value,
-        success_redirect_url: `https://topupgamesku.xyz/etalase/${order.category}/status/${order._id}`,
-        failure_redicect_url: `https://topupgamesku.xyz/etalase/${order.category}/failure/${order._id}`,
+        success_redirect_url: `http://localhost:3000/etalase/${order.category}/status/${order._id}`,
+        failure_redicect_url: `http://localhost:3000/etalase/${order.category}/failure/${order._id}`,
       },
+      category: order.category,
     });
   };
 
   const handleChargeData = () => {
-    if (order.paymentMethod === "Dana" || "LinkAja" || "ShopeePay") {
+    if (order.paymentMethod !== "Ovo") {
       setChargeData({
         ...chargeData,
         reference_id: order._id,
@@ -127,8 +128,8 @@ const EWalletForm = () => {
             : "ID_LINKAJA",
         channel_properties: {
           success_redirect_url: `https://topupgamesku.xyz/etalase/${order.category}/status/${order._id}`,
-          failure_redicect_url: `https://topupgamesku.xyz/etalase/${order.category}/failure/${order._id}`,
         },
+        category: order.category,
       });
     }
   };
@@ -136,11 +137,7 @@ const EWalletForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (chargeData) {
-      if (order.paymentMethod === "Ovo") {
-        dispatch(EWalletOvoCharge({ ...chargeData }, history));
-      } else {
-        dispatch(EWalletCharge({ ...chargeData }, history));
-      }
+      dispatch(EWalletsCharge({ ...chargeData }, history));
     }
   };
 

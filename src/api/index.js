@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "https://topupgamesku.herokuapp.com" });
+const API = axios.create({ baseURL: "https://d31c-114-79-16-30.ngrok.io" });
 
 export const fetchAllSlides = () => API.get(`/api/slides`);
 
@@ -14,7 +14,5 @@ export const fetchProduct = (id) => API.get(`/api/products/product/${id}`);
 export const createOrder = (order) => API.post(`/api/orders`, order);
 export const fetchOrder = (id) => API.get(`/api/orders/order/${id}`);
 
-export const ewalletCharge = (chargeData) =>
-  API.post(`/api/transactions/ewallets`, chargeData);
-export const ewalletOvoCharge = (chargeData) =>
-  API.post(`/api/transactions/ewallets/charges`, chargeData);
+export const ewalletsCharge = (chargeData) =>
+  API.post("/api/transactions/ewallets/charges", chargeData);
