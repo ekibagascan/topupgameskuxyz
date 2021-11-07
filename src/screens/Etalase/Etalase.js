@@ -38,6 +38,7 @@ const initialState = {
   zoneId: "",
   server: "",
   productName: "",
+  productId: "",
   totalPrice: "",
   paymentMethod: "",
   category: "",

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   Paper,
   Typography,
@@ -6,83 +6,83 @@ import {
   Grid,
   Autocomplete,
   Chip,
-} from '@mui/material'
-import { styled } from '@mui/material/styles'
-import NumberFormat from 'react-number-format'
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import NumberFormat from "react-number-format";
 
 const MyPaper = styled(Paper)(() => ({
-  width: '100%',
-  marginBottom: '20px',
-}))
+  width: "100%",
+  marginBottom: "20px",
+}));
 
 const Title = styled(Typography)(({ theme }) => ({
   paddingTop: 15,
   paddingLeft: 17,
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '0.9rem',
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "0.9rem",
     fontWeight: 550,
   },
-}))
+}));
 const HelperText = styled(Typography)(({ theme }) => ({
-  [theme.breakpoints.down('sm')]: {
-    padding: '0px 15px',
+  [theme.breakpoints.down("sm")]: {
+    padding: "0px 15px",
   },
-}))
+}));
 const Info = styled(Typography)(({ theme }) => ({
-  fontSize: '0.8rem',
+  fontSize: "0.8rem",
   fontWeight: 500,
-  margin: '9px 0px auto 30px',
-  [theme.breakpoints.down('sm')]: {
-    margin: '9px 0px auto 0px',
-    padding: '0px 15px',
+  margin: "9px 0px auto 30px",
+  [theme.breakpoints.down("sm")]: {
+    margin: "9px 0px auto 0px",
+    padding: "0px 15px",
   },
-}))
+}));
 const InputField = styled(TextField)(({ theme }) => ({
-  width: '50%',
-  [theme.breakpoints.down('sm')]: {
-    '& label': {
-      fontSize: '0.9rem',
+  width: "50%",
+  [theme.breakpoints.down("sm")]: {
+    "& label": {
+      fontSize: "0.9rem",
     },
   },
-}))
+}));
 
 const InputContainer = styled(Grid)(() => ({
-  display: 'flex',
-  padding: '20px 5px',
-}))
+  display: "flex",
+  padding: "20px 5px",
+}));
 
 const InputForm = styled(Grid)(() => ({
-  display: 'flex',
+  display: "flex",
   paddingBottom: 5,
-}))
+}));
 
 const ServerList = styled(Autocomplete)(() => ({
   marginLeft: 8,
-  width: '40%',
-}))
+  width: "40%",
+}));
 
 const InputServer = styled(TextField)(({ theme }) => ({
-  width: '100%',
-  [theme.breakpoints.down('sm')]: {
-    '& label': {
-      fontSize: '0.9rem',
+  width: "100%",
+  [theme.breakpoints.down("sm")]: {
+    "& label": {
+      fontSize: "0.9rem",
     },
   },
-}))
+}));
 const InputID = ({ category, productData, setProductData }) => {
-  if (!category || category.form === 'none') return null
+  if (!category || category.form === "none") return null;
 
   return (
     <MyPaper key={category._id} elevation={1}>
-      <Title variant='h6'>1. {category.title}</Title>
-      <InputContainer container alignItems='stretch' spacing={{ xs: 1, md: 3 }}>
+      <Title variant="h6">1. {category.title}</Title>
+      <InputContainer container alignItems="stretch" spacing={{ xs: 1, md: 3 }}>
         <InputForm item xs={12}>
           <InputField
-            name='id'
-            id='outlined-error-helper-text'
-            variant='outlined'
+            name="id"
+            id="outlined-error-helper-text"
+            variant="outlined"
             label={category.title}
-            sx={{ margin: 'auto 5px' }}
+            sx={{ margin: "auto 5px" }}
             value={productData.playerId}
             onChange={(e) =>
               setProductData({
@@ -91,14 +91,14 @@ const InputID = ({ category, productData, setProductData }) => {
               })
             }
           />
-          {category.form === 'double' ? (
+          {category.form === "double" ? (
             <InputField
-              name='zoneid'
-              id='outlined-error-helper-text'
-              variant='outlined'
+              name="zoneid"
+              id="outlined-error-helper-text"
+              variant="outlined"
               label={category.subtitle}
-              width='70%'
-              sx={{ margin: 'auto 5px' }}
+              width="70%"
+              sx={{ margin: "auto 5px" }}
               value={productData.zoneId}
               onChange={(e) =>
                 setProductData({
@@ -107,21 +107,21 @@ const InputID = ({ category, productData, setProductData }) => {
                 })
               }
             >
-              {' '}
+              {" "}
               <NumberFormat
-                format='(#####)'
-                mask='_'
+                format="(#####)"
+                mask="_"
                 allowEmptyFormatting={true}
-                displayType='input'
-              />{' '}
+                displayType="input"
+              />{" "}
             </InputField>
           ) : null}
-          {category.form === 'doubleServer' ? (
+          {category.form === "doubleServer" ? (
             <ServerList
-              id='server'
+              id="server"
               options={category.server}
-              getOptionLabel={(option) => option}
-              getOptionSelected={(option, value) =>
+              getOptionLabel={(option) => option.toString()}
+              isOptionEqualToValue={(option, value) =>
                 option.category === value.category
               }
               onChange={(e, value) =>
@@ -131,9 +131,9 @@ const InputID = ({ category, productData, setProductData }) => {
               renderInput={(params) => (
                 <InputServer
                   {...params}
-                  name='category'
+                  name="category"
                   label={category.subtitle}
-                  variant='outlined'
+                  variant="outlined"
                 />
               )}
             />
@@ -141,25 +141,25 @@ const InputID = ({ category, productData, setProductData }) => {
         </InputForm>
         <HelperText
           sx={{
-            fontSize: '0.6rem',
-            padding: '0px 30px',
+            fontSize: "0.6rem",
+            padding: "0px 30px",
           }}
         >
           {category.instruction}. Harap Cek kembali ID Anda sebelum order.
           (Kesalahan ID bukan tanggung jawab kami)
         </HelperText>
-        <Grid sx={{ display: 'flex' }}>
+        <Grid sx={{ display: "flex" }}>
           <Info>Jam Operasional:</Info>
           <Chip
             label={category.operationTime}
-            variant='contained'
-            size='small'
-            sx={{ margin: '8px 0px auto 5px' }}
+            variant="contained"
+            size="small"
+            sx={{ margin: "8px 0px auto 5px" }}
           />
         </Grid>
       </InputContainer>
     </MyPaper>
-  )
-}
+  );
+};
 
-export default InputID
+export default InputID;

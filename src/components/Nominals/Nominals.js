@@ -1,78 +1,78 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import {
   Paper,
   Typography,
   ListItemButton,
   Grid,
   IconButton,
-} from '@mui/material'
-import { styled } from '@mui/material/styles'
-import CheckIcon from '@mui/icons-material/Check'
-import { useDispatch, useSelector } from 'react-redux'
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import CheckIcon from "@mui/icons-material/Check";
+import { useDispatch, useSelector } from "react-redux";
 
-import { getProduct } from '../../actions/products'
-import PaymentMethod from '../PaymentMethod/PaymentMethod'
+import { getProduct } from "../../actions/products";
+import PaymentMethod from "../PaymentMethod/PaymentMethod";
 
 const MyPaper = styled(Paper)(() => ({
-  width: '100%',
-  marginBottom: '20px',
-}))
+  width: "100%",
+  marginBottom: "20px",
+}));
 
 const Title = styled(Typography)(({ theme }) => ({
   paddingTop: 15,
   paddingLeft: 17,
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '0.9rem',
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "0.9rem",
     fontWeight: 550,
   },
-}))
+}));
 
 const ProductContainer = styled(Grid)(() => ({
-  display: 'flex',
-  padding: '20px 5px',
-}))
+  display: "flex",
+  padding: "20px 5px",
+}));
 const Voucher = styled(Grid)(() => ({
-  display: 'flex',
+  display: "flex",
   paddingBottom: 25,
-  justifyContent: 'center',
-  alignItems: 'center',
-}))
+  justifyContent: "center",
+  alignItems: "center",
+}));
 const ProductName = styled(Typography)(({ theme }) => ({
   fontWeight: 550,
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '0.7rem',
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "0.7rem",
     fontWeight: 550,
   },
-  [theme.breakpoints.down('xs')]: {
-    fontSize: '0.5rem',
+  [theme.breakpoints.down("xs")]: {
+    fontSize: "0.5rem",
     fontWeight: 500,
   },
-}))
+}));
 
 const Nominals = ({ products, category, productData, setProductData }) => {
-  const [currentId, setCurrentId] = useState(0)
-  const dispatch = useDispatch()
-  const { product } = useSelector((state) => state.products)
+  const [currentId, setCurrentId] = useState(0);
+  const dispatch = useDispatch();
+  const { product } = useSelector((state) => state.products);
 
   useEffect(() => {
-    if (currentId) dispatch(getProduct(currentId))
-  }, [dispatch, currentId])
+    if (currentId) dispatch(getProduct(currentId));
+  }, [dispatch, currentId]);
 
   const handleListItemClick = (name, index) => {
-    setCurrentId(index)
-    setProductData({ ...productData, productName: name })
-  }
+    setCurrentId(index);
+    setProductData({ ...productData, productName: name, productId: index });
+  };
 
   return (
     <Grid>
       <MyPaper elevation={1}>
-        <Title variant='h6'>
-          2. {category.form === 'none' ? 'Pilih Edisi' : 'Pilih Nominal Top Up'}
+        <Title variant="h6">
+          2. {category.form === "none" ? "Pilih Edisi" : "Pilih Nominal Top Up"}
         </Title>
         <ProductContainer
           container
-          justifyContent='center'
-          alignItems='stretch'
+          justifyContent="center"
+          alignItems="stretch"
         >
           <Voucher container>
             {products.map((product) => (
@@ -82,38 +82,38 @@ const Nominals = ({ products, category, productData, setProductData }) => {
                 selected={currentId === product._id}
                 onClick={() => handleListItemClick(product.name, product._id)}
                 sx={{
-                  display: 'inline',
-                  width: '30%',
-                  textAlign: 'center',
+                  display: "inline",
+                  width: "30%",
+                  textAlign: "center",
                   margin: 1,
                   border: 1,
-                  borderColor: 'secondary.main',
+                  borderColor: "secondary.main",
                   borderRadius: 1,
                 }}
               >
                 {currentId === product._id ? (
                   <IconButton
-                    component='span'
+                    component="span"
                     sx={{
-                      position: 'absolute',
+                      position: "absolute",
                       left: 2,
                       top: 2,
-                      borderRadius: '15px',
-                      backgroundColor: '#9147FF',
+                      borderRadius: "15px",
+                      backgroundColor: "#9147FF",
                     }}
                   >
                     <CheckIcon
                       sx={{
-                        position: 'absolute',
+                        position: "absolute",
                         height: 16,
-                        color: '#fff',
+                        color: "#fff",
                       }}
                     />
                   </IconButton>
                 ) : null}
                 <ProductName
-                  variant='body2'
-                  sx={{ textAlign: 'center', padding: 1 }}
+                  variant="body2"
+                  sx={{ textAlign: "center", padding: 1 }}
                 >
                   {product.name}
                 </ProductName>
@@ -129,7 +129,7 @@ const Nominals = ({ products, category, productData, setProductData }) => {
         setProductData={setProductData}
       />
     </Grid>
-  )
-}
+  );
+};
 
-export default Nominals
+export default Nominals;

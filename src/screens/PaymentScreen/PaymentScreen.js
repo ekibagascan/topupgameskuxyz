@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from "react";
 import {
   Grow,
   Grid,
@@ -13,164 +13,137 @@ import {
   Snackbar,
   Alert,
   Link,
-} from '@mui/material'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-import { styled } from '@mui/material/styles'
-import { useParams } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import NumberFormat from 'react-number-format'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
+  Skeleton,
+  Box,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { useParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import NumberFormat from "react-number-format";
 
-import qrisku from '../../assets/images/qrisku.png'
-import paid from '../../assets/images/PAID.svg'
-import check from '../../assets/images/checklist.svg'
-import wa from '../../assets/images/wa.svg'
-import CaraBayar from '../../components/CaraBayar/CaraBayar'
-import payments from '../../components/payments'
-import { getOrder } from '../../actions/orders'
+import paid from "../../assets/images/PAID.svg";
+import check from "../../assets/images/checklist.svg";
+import wa from "../../assets/images/wa.svg";
+import payments from "../../components/payments";
+import { getOrder } from "../../actions/orders";
 
 const TitleDetails = styled(Typography)(({ theme }) => ({
-  textAlign: 'start',
-  fontSize: '0.9rem',
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '0.7rem',
+  textAlign: "start",
+  fontSize: "0.9rem",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "0.7rem",
   },
-}))
+}));
 const DetailsOrder = styled(Typography)(({ theme }) => ({
-  textAlign: 'end',
-  fontSize: '1rem',
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '0.8rem',
+  textAlign: "end",
+  fontSize: "1rem",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "0.7rem",
   },
-}))
+}));
 const TotalTitle = styled(Typography)(({ theme }) => ({
-  textAlign: 'start',
-  fontSize: '1.5rem',
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '0.8rem',
+  textAlign: "start",
+  fontSize: "1.5rem",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "0.8rem",
   },
-}))
+}));
+const StepProcess = styled(Typography)(({ theme }) => ({
+  textAlign: "center",
+  fontSize: "1rem",
+  color: "#25D366",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "0.8rem",
+  },
+}));
 const NominalOrderList = styled(Typography)(({ theme }) => ({
-  textAlign: 'end',
-  fontSize: '2rem',
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '1.2rem',
+  textAlign: "end",
+  fontSize: "2rem",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "1.2rem",
   },
-  [theme.breakpoints.down('xs')]: {
-    fontSize: '0.9rem',
+  [theme.breakpoints.down("xs")]: {
+    fontSize: "0.9rem",
   },
-}))
-const NominalOrder = styled(Typography)(({ theme }) => ({
-  fontSize: '2.5rem',
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '1.5rem',
-  },
-  [theme.breakpoints.down('xs')]: {
-    fontSize: '1rem',
-  },
-}))
+}));
+
 const StatusOrder = styled(Typography)(({ theme }) => ({
-  textAlign: 'end',
-  fontSize: '1.6rem',
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '0.9rem',
+  textAlign: "end",
+  fontSize: "1.6rem",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "0.9rem",
   },
-  [theme.breakpoints.down('xs')]: {
-    fontSize: '0.8rem',
+  [theme.breakpoints.down("xs")]: {
+    fontSize: "0.8rem",
   },
-}))
+}));
 const GuidanceText = styled(Typography)(({ theme }) => ({
-  fontSize: '0.8rem',
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '0.7rem',
+  fontSize: "0.8rem",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "0.7rem",
   },
-}))
-const QRCode = styled('img')(({ theme }) => ({
-  [theme.breakpoints.down('sm')]: {
-    height: '180px',
-  },
-  [theme.breakpoints.down('xs')]: {
-    height: '140px',
-  },
-}))
+}));
 
 const PaymentScreen = () => {
-  const dispatch = useDispatch()
-  const { order, isLoading } = useSelector((state) => state.orders)
-  const [copied, setCopied] = useState(false)
-  const { id } = useParams()
-  const [open, setOpen] = React.useState(false)
-  const [enter, setEnter] = useState(false)
-
-  const handleClick = () => {
-    setCopied(true)
-    if (copied === true) {
-      setOpen(true)
-    }
-  }
+  const dispatch = useDispatch();
+  const { order, isLoading } = useSelector((state) => state.orders);
+  const { id } = useParams();
+  const [open, setOpen] = React.useState(false);
 
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return
+    if (reason === "clickaway") {
+      return;
     }
 
-    setOpen(false)
-  }
-
-  const handleClickEnter = () => {
-    setEnter(true)
-  }
-
-  const handleCloseEnter = () => {
-    setEnter(false)
-  }
+    setOpen(false);
+  };
 
   useEffect(() => {
-    dispatch(getOrder(id))
-  }, [dispatch, id])
+    dispatch(getOrder(id));
+  }, [dispatch, id]);
 
-  if (!order) return null
+  if (!order) return null;
 
   if (isLoading)
     return (
       <Grid>
         <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={true}
         >
-          <CircularProgress color='inherit' />
+          <CircularProgress color="inherit" />
         </Backdrop>
       </Grid>
-    )
+    );
 
   return (
     <Grow in>
-      <Container maxWidth='sm' sx={{ paddingLeft: 0, paddingRight: 0 }}>
+      <Container maxWidth="sm" sx={{ paddingLeft: 0, paddingRight: 0 }}>
         <Grid
           container
-          justifyContent='space-between'
-          aligntitems='stretch'
-          alignContent='center'
+          justifyContent="space-between"
+          aligntitems="stretch"
+          alignContent="center"
           spacing={3}
         >
           <Grid item xs={12}>
-            <Paper elevation={2} sx={{ marginTop: '70px', padding: 2 }}>
+            <Paper elevation={2} sx={{ marginTop: "70px", padding: 2 }}>
               <Grid>
                 <Typography
-                  variant='h6'
-                  sx={{ marginTop: '20px', marginBottom: '5px' }}
+                  variant="h6"
+                  sx={{ marginTop: "20px", marginBottom: "5px" }}
                 >
-                  Detail Order
+                  Detail Order 🧾
                 </Typography>
-                <Divider sx={{ color: '#1F1F1F' }} />
+                <Divider sx={{ color: "#1F1F1F" }} />
                 <Grid container spacing={2} sx={{ padding: 2 }}>
                   <Grid
                     item
                     xs={12}
-                    justifyContent='space-between'
-                    sx={{ display: 'flex' }}
+                    justifyContent="space-between"
+                    sx={{ display: "flex" }}
                   >
-                    <TitleDetails sx={{ color: 'text.secondary' }}>
+                    <TitleDetails sx={{ color: "text.secondary" }}>
                       ID player:
                     </TitleDetails>
                     <DetailsOrder>{order.playerId}</DetailsOrder>
@@ -179,10 +152,10 @@ const PaymentScreen = () => {
                     <Grid
                       item
                       xs={12}
-                      justifyContent='space-between'
-                      sx={{ display: 'flex' }}
+                      justifyContent="space-between"
+                      sx={{ display: "flex" }}
                     >
-                      <TitleDetails sx={{ color: 'text.secondary' }}>
+                      <TitleDetails sx={{ color: "text.secondary" }}>
                         Zone ID:
                       </TitleDetails>
                       <DetailsOrder>{order.zoneId}</DetailsOrder>
@@ -192,10 +165,10 @@ const PaymentScreen = () => {
                     <Grid
                       item
                       xs={12}
-                      justifyContent='space-between'
-                      sx={{ display: 'flex' }}
+                      justifyContent="space-between"
+                      sx={{ display: "flex" }}
                     >
-                      <TitleDetails sx={{ color: 'text.secondary' }}>
+                      <TitleDetails sx={{ color: "text.secondary" }}>
                         Server/Platform:
                       </TitleDetails>
                       <DetailsOrder>{order.server}</DetailsOrder>
@@ -204,10 +177,10 @@ const PaymentScreen = () => {
                   <Grid
                     item
                     xs={12}
-                    justifyContent='space-between'
-                    sx={{ display: 'flex' }}
+                    justifyContent="space-between"
+                    sx={{ display: "flex" }}
                   >
-                    <TitleDetails sx={{ color: 'text.secondary' }}>
+                    <TitleDetails sx={{ color: "text.secondary" }}>
                       Nama item:
                     </TitleDetails>
                     <DetailsOrder>{order.productName}</DetailsOrder>
@@ -215,85 +188,85 @@ const PaymentScreen = () => {
                   <Grid
                     item
                     xs={12}
-                    justifyContent='space-between'
-                    sx={{ display: 'flex' }}
+                    justifyContent="space-between"
+                    sx={{ display: "flex" }}
                   >
-                    <TitleDetails sx={{ color: 'text.secondary' }}>
+                    <TitleDetails sx={{ color: "text.secondary" }}>
                       Harga item:
                     </TitleDetails>
                     <DetailsOrder>
-                      {' '}
+                      {" "}
                       <NumberFormat
                         value={order.totalPrice}
-                        displayType='text'
-                        thousandSeparator='.'
-                        prefix='Rp.'
-                        mask=''
+                        displayType="text"
+                        thousandSeparator="."
+                        prefix="Rp."
+                        mask=""
                         allowLeadingZeros={false}
                         allowEmptyFormatting={false}
                         fixedDecimalScale={false}
                         isNumericString={false}
                         allowNegative={true}
-                        decimalSeparator=','
+                        decimalSeparator=","
                       />
                     </DetailsOrder>
                   </Grid>
                   <Grid
                     item
                     xs={12}
-                    justifyContent='space-between'
-                    sx={{ display: 'flex' }}
+                    justifyContent="space-between"
+                    sx={{ display: "flex" }}
                   >
-                    <TitleDetails sx={{ color: 'text.secondary' }}>
+                    <TitleDetails sx={{ color: "text.secondary" }}>
                       Bayar pake:
                     </TitleDetails>
                     <DetailsOrder>{order.paymentMethod}</DetailsOrder>
                   </Grid>
                 </Grid>
-                <Divider sx={{ color: '#1F1F1F' }} />
+                <Divider sx={{ color: "#1F1F1F" }} />
                 <Grid
-                  justifyContent='space-between'
-                  alignItems='center'
+                  justifyContent="space-between"
+                  alignItems="center"
                   sx={{
-                    display: 'flex',
+                    display: "flex",
                     paddingLeft: 2,
                     paddingRight: 2,
-                    marginTop: '5px',
-                    marginBottom: '5px',
+                    marginTop: "5px",
+                    marginBottom: "5px",
                   }}
                 >
                   <TotalTitle sx={{ fontWeight: 450 }}>Total Order:</TotalTitle>
                   <NominalOrderList
                     sx={{
                       fontWeight: 600,
-                      color: 'text.secondary',
+                      color: "text.secondary",
                     }}
                   >
                     <NumberFormat
                       value={order.totalPrice}
-                      displayType='text'
-                      thousandSeparator='.'
-                      prefix='Rp.'
-                      mask=''
+                      displayType="text"
+                      thousandSeparator="."
+                      prefix="Rp."
+                      mask=""
                       allowLeadingZeros={false}
                       allowEmptyFormatting={false}
                       fixedDecimalScale={false}
                       isNumericString={false}
                       allowNegative={true}
-                      decimalSeparator=','
+                      decimalSeparator=","
                     />
                   </NominalOrderList>
                 </Grid>
-                <Divider sx={{ color: '#1F1F1F' }} />
+                <Divider sx={{ color: "#1F1F1F" }} />
                 <Grid
-                  justifyContent='space-between'
-                  alignItems='center'
+                  justifyContent="space-between"
+                  alignItems="center"
                   sx={{
-                    display: 'flex',
+                    display: "flex",
                     paddingLeft: 2,
                     paddingRight: 2,
-                    marginTop: '5px',
-                    marginBottom: '5px',
+                    marginTop: "5px",
+                    marginBottom: "5px",
                   }}
                 >
                   <TotalTitle sx={{ fontWeight: 450 }}>Status:</TotalTitle>
@@ -302,176 +275,106 @@ const PaymentScreen = () => {
                       fontWeight: 600,
                       color:
                         order.isDelivered && order.isPaid
-                          ? '#9147FF'
+                          ? "#9147FF"
                           : order.isPaid
-                          ? '#9147FF'
-                          : 'text.secondary',
+                          ? "#9147FF"
+                          : "text.secondary",
                     }}
                   >
                     {order.isDelivered && order.isPaid
-                      ? 'Order Terkirim'
+                      ? "Dah Terkirim Ka🥳"
                       : order.isPaid
-                      ? 'Sudah dibayar'
-                      : 'Belum dibayar'}
+                      ? "Dah Lunas Ka😎"
+                      : "Lum bayar Ka😁"}
                   </StatusOrder>
                 </Grid>
-                <Divider sx={{ color: '#1F1F1F' }} />
-                <Grid textAlign='center'>
-                  {order.isDelivered && order.isPaid ? (
-                    <Typography
-                      sx={{
-                        fontWeight: 500,
-                        marginTop: '20px',
-                      }}
-                    >
-                      {' '}
-                      Order kamu sukses terkirim dan kamu siap naik level 😊.
-                    </Typography>
-                  ) : order.isPaid ? (
-                    <Typography
-                      sx={{
-                        fontWeight: 500,
-                        marginTop: '20px',
-                      }}
-                    >
-                      {' '}
-                      Terima kasih, pembayaran sudah kami terima 😉.
-                    </Typography>
-                  ) : (
-                    <GuidanceText sx={{ marginTop: '20px' }}>
-                      Silahkan scan QRIS Code di bawah melalui Aplikasi{' '}
-                      <strong>{order.paymentMethod}</strong> dan input nominal
-                      pembayaran sesuai total order di atas:
-                    </GuidanceText>
-                  )}
+                <Divider sx={{ color: "#1F1F1F" }} />
+                <Grid textAlign="center">
                   {payments.map((payment) =>
                     payment.name === order?.paymentMethod ? (
                       <Grid
                         key={payment._id}
                         item
                         xs={12}
-                        sx={{ marginTop: '20px', textAlign: 'center' }}
+                        sx={{ marginTop: "20px", textAlign: "center" }}
                       >
-                        {!order.isPaid ? (
-                          <Typography variant='h6' sx={{ fontWeight: 800 }}>
-                            TOPUPGAMESKU
-                          </Typography>
-                        ) : null}
                         {order.isDelivered && order.isPaid ? (
-                          <ImageListItem sx={{ width: '80px' }}>
-                            <img alt='successfull' src={check} loading='lazy' />
+                          <ImageListItem sx={{ width: "80px" }}>
+                            <img alt="successfull" src={check} loading="lazy" />
                           </ImageListItem>
                         ) : order.isPaid ? (
-                          <ImageListItem sx={{ width: '80px' }}>
-                            <img alt='paid' src={paid} />
+                          <ImageListItem sx={{ width: "80px" }}>
+                            <img alt="paid" src={paid} />
                           </ImageListItem>
                         ) : (
-                          <QRCode
-                            alt='qris'
-                            src={qrisku}
-                            height='250px'
-                            loading='lazy'
+                          <Skeleton
+                            sx={{ margin: "5px auto", bgcolor: "#25D366" }}
+                            variant="circular"
+                            width={40}
+                            height={40}
                           />
                         )}
                       </Grid>
                     ) : null
                   )}
-                  {!order.isPaid ? (
-                    <Grid>
-                      <NominalOrder
-                        sx={{
-                          fontWeight: 600,
-                          color: '#000',
-                          textAlign: 'center',
-                        }}
-                      >
-                        <CopyToClipboard
-                          onCopy={() => setCopied(true)}
-                          text={order.totalPrice}
-                        >
-                          <IconButton color='primary' onClick={handleClick}>
-                            <ContentCopyIcon size='small' />
-                          </IconButton>
-                        </CopyToClipboard>
 
-                        <NumberFormat
-                          value={order.totalPrice}
-                          displayType='text'
-                          thousandSeparator='.'
-                          prefix='Rp.'
-                          mask=''
-                          allowLeadingZeros={false}
-                          allowEmptyFormatting={false}
-                          fixedDecimalScale={false}
-                          isNumericString={false}
-                          allowNegative={true}
-                          decimalSeparator=','
-                        />
-                      </NominalOrder>
-                      <Typography
-                        color='primary'
-                        sx={{
-                          fontWeight: 500,
-                          marginTop: '5px',
-                        }}
-                        onClick={handleClickEnter}
-                      >
-                        Cara Bayar
-                      </Typography>
-                      <CaraBayar
-                        enter={enter}
-                        handleCloseEnter={handleCloseEnter}
-                      />
-                    </Grid>
-                  ) : null}
-                  <Typography
-                    sx={{
-                      fontWeight: 500,
-                      marginTop: '15px',
-                    }}
-                  >
-                    {order.isDelivered && order.isPaid
-                      ? 'Terima kasih atas kepercayaannya.'
-                      : order.isPaid
-                      ? 'Order akan langsung kami kirim.'
-                      : null}
-                  </Typography>
-                  <GuidanceText
-                    sx={{ marginTop: '10px', marginBottom: '20px' }}
-                  >
-                    {!order.isPaid ? (
-                      <strong>
-                        *Harap bayar sesuai nominal dan pake Aplikasi pembayaran
-                        sesuai keterangan di atas, jika tidak order tidak akan
-                        diproses. Status akan berubah dan order akan dikirim
-                        langsung setelah kamu melakukan pembayaran.
-                      </strong>
-                    ) : null}
-                  </GuidanceText>
+                  {order.isDelivered && order.isPaid ? (
+                    <Typography
+                      sx={{
+                        fontWeight: 500,
+                        marginTop: "20px",
+                      }}
+                    >
+                      {" "}
+                      Order kamu sukses terkirim dan kamu siap naik level 😊.
+                    </Typography>
+                  ) : order.isPaid ? (
+                    <Typography
+                      sx={{
+                        fontWeight: 500,
+                        marginTop: "20px",
+                      }}
+                    >
+                      {" "}
+                      Terima kasih, pembayaran sudah kami terima 😉.
+                    </Typography>
+                  ) : (
+                    <Box sx={{ maxWidth: "250px", margin: "auto" }}>
+                      <StepProcess sx={{ margin: "20px auto 5px" }}>
+                        <strong>Proses Pembayaran</strong>
+                      </StepProcess>
+                      <GuidanceText sx={{ margin: "0px auto 20px" }}>
+                        Silahkan check aplikasi{" "}
+                        <strong>{order.paymentMethod}</strong> kamu dan segera
+                        selesaikan pembayaranmu agar order dapat diproses ya.🤗
+                      </GuidanceText>
+                    </Box>
+                  )}
+
                   <Grid>
                     <Link
-                      href='https://wa.me/+6288803890773'
-                      target='_blank'
-                      rel='noreferrer'
-                      color='inherit'
-                      underline='none'
+                      href="https://wa.me/+6288803890773"
+                      target="_blank"
+                      rel="noreferrer"
+                      color="inherit"
+                      underline="none"
                     >
                       <Grid
-                        alignItems='center'
-                        justifyContent='center'
-                        sx={{ display: 'flex', flexDirection: 'row' }}
+                        alignItems="center"
+                        justifyContent="center"
+                        sx={{ display: "flex", flexDirection: "row" }}
                       >
                         <IconButton>
-                          <img alt='whatsapp' src={wa} height='20px' />
+                          <img alt="whatsapp" src={wa} height="20px" />
                         </IconButton>
                         <Typography
                           sx={{
-                            fontSize: '0.8rem',
+                            fontSize: "0.7rem",
                             fontWeight: 400,
-                            color: '#4E9F3D',
+                            color: "#4E9F3D",
                           }}
                         >
-                          Kontak kami jika kamu butuh bantuan
+                          Kontak kami jika kamu butuh bantuan.👌
                         </Typography>
                       </Grid>
                     </Link>
@@ -484,8 +387,8 @@ const PaymentScreen = () => {
                   >
                     <Alert
                       onClose={handleClose}
-                      severity='success'
-                      sx={{ width: '100%' }}
+                      severity="success"
+                      sx={{ width: "100%" }}
                     >
                       Copied!
                     </Alert>
@@ -497,7 +400,7 @@ const PaymentScreen = () => {
         </Grid>
       </Container>
     </Grow>
-  )
-}
+  );
+};
 
-export default PaymentScreen
+export default PaymentScreen;

@@ -17,7 +17,7 @@ import { useSelector, useDispatch } from "react-redux";
 import NumberFormat from "react-number-format";
 
 import { getOrder } from "../../actions/orders";
-import { EWalletCharge } from "../../actions/e-wallets";
+import { EWalletCharge, EWalletOvoCharge } from "../../actions/e-wallets";
 import tpg from "../../assets/images/tpg.svg";
 import payments from "../../components/payments";
 
@@ -77,14 +77,16 @@ const EWalletForm = () => {
   const { order, isLoading } = useSelector((state) => state.orders);
   const { id } = useParams();
   const [chargeData, setChargeData] = useState({
-    referenceID: "",
-    currency: "IDR",
+    reference_id: "",
+    currency: "",
     amount: "",
-    checkoutMethod: "ONE_TIME_PAYMENT",
-    channelCode: "",
-    channelProperties: {
-      mobileNumber: "",
-      successRedirectURL: "",
+    checkout_method: "ONE_TIME_PAYMENT",
+    channel_code: "",
+    mobile_number: "",
+    channel_properties: {
+      mobile_number: "",
+      success_redirect_url: "",
+      failure_redicect_url: "",
     },
   });
 
@@ -92,42 +94,40 @@ const EWalletForm = () => {
     dispatch(getOrder(id));
   }, [dispatch, id]);
 
-  const handleOvoShopeeInput = (e) => {
+  const handleOvoInput = (e) => {
     setChargeData({
       ...chargeData,
-      channelProperties: {
-        mobileNumber: e.target.value,
-        successRedirectURL: `https://topupgamesku.xyz/etalase/${order.category}/order/${order._id}`,
-      },
-      referenceID: order._id,
+      reference_id: order._id,
+      currency: "IDR",
       amount: order.totalPrice,
-      channelCode:
-        order.paymentMethod === "Ovo"
-          ? "ID_OVO"
-          : order.paymentMethod === "ShopeePay"
-          ? "ID_SHOPEEPAY"
-          : order.paymentMethod === "Dana"
-          ? "ID_DANA"
-          : "ID_LINKAJA",
+      mobile_number: e.target.value,
+      checkout_method: "ONE_TIME_PAYMENT",
+      channel_code: "ID_OVO",
+      channel_properties: {
+        mobile_number: e.target.value,
+        success_redirect_url: `https://topupgamesku.xyz/etalase/${order.category}/status/${order._id}`,
+        failure_redicect_url: `https://topupgamesku.xyz/etalase/${order.category}/failure/${order._id}`,
+      },
     });
   };
 
   const handleChargeData = () => {
-    if (order.paymentMethod !== "Ovo") {
+    if (order.paymentMethod === "Dana" || "LinkAja" || "ShopeePay") {
       setChargeData({
         ...chargeData,
-        referenceID: order._id,
-        amount: order._totalPrice,
-        channelCode:
-          order.paymentMethod === "Ovo"
-            ? "ID_OVO"
-            : order.paymentMethod === "ShopeePay"
+        reference_id: order._id,
+        currency: "IDR",
+        amount: order.totalPrice,
+        checkout_method: "ONE_TIME_PAYMENT",
+        channel_code:
+          order.paymentMethod === "ShopeePay"
             ? "ID_SHOPEEPAY"
             : order.paymentMethod === "Dana"
             ? "ID_DANA"
             : "ID_LINKAJA",
-        channelProperties: {
-          successRedirectURL: `https://topupgamesku.xyz/etalase/${order.category}/order/status/${order._id}`,
+        channel_properties: {
+          success_redirect_url: `https://topupgamesku.xyz/etalase/${order.category}/status/${order._id}`,
+          failure_redicect_url: `https://topupgamesku.xyz/etalase/${order.category}/failure/${order._id}`,
         },
       });
     }
@@ -136,7 +136,11 @@ const EWalletForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (chargeData) {
-      dispatch(EWalletCharge({ ...chargeData }, history));
+      if (order.paymentMethod === "Ovo") {
+        dispatch(EWalletOvoCharge({ ...chargeData }, history));
+      } else {
+        dispatch(EWalletCharge({ ...chargeData }, history));
+      }
     }
   };
 
@@ -207,7 +211,7 @@ const EWalletForm = () => {
                   >
                     {order.paymentMethod === "Ovo" ? (
                       <InputField
-                        onChange={handleOvoShopeeInput}
+                        onChange={handleOvoInput}
                         label="Masukkan nomor ponsel OVO"
                         sx={{ margin: "8px auto", width: "100%" }}
                         helperText="Pastikan nomor ponsel sama dengan nomor yang terdaftar pada OVO Wallet kamu ya 👌."
@@ -273,22 +277,21 @@ const EWalletForm = () => {
                         </NominalOrderList>
                       </Grid>
                     </Grid>
-                    <Grid>
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        fullWidth
-                        onClick={handleChargeData}
-                        color="primary"
-                        sx={{
-                          borderRadius: "15px",
-                          backgroundColor: "#0F00FF",
-                          margin: "15px auto 20px",
-                        }}
-                      >
-                        Lanjut
-                      </Button>
-                    </Grid>
+
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      fullWidth
+                      onClick={handleChargeData}
+                      color="primary"
+                      sx={{
+                        borderRadius: "15px",
+                        backgroundColor: "#0F00FF",
+                        margin: "15px auto 20px",
+                      }}
+                    >
+                      Lanjut
+                    </Button>
                   </Grid>
                 </Grid>
               </Paper>

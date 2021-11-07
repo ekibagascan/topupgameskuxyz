@@ -6,9 +6,24 @@ export const EWalletCharge = (chargeData, history) => async (dispatch) => {
     dispatch({ type: START_LOADING });
 
     const { data } = await api.ewalletCharge(chargeData);
-    console.log(data);
+    history.push(
+      `/etalase/${chargeData.category}/order/status/${chargeData.reference_id}`
+    );
     dispatch({ type: EWALLET_CHARGE, payload: data });
-    history.push(`/etalase/${data.category}/order/status/${data._id}`);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const EWalletOvoCharge = (chargeData, history) => async (dispatch) => {
+  try {
+    dispatch({ type: START_LOADING });
+
+    const { data } = await api.ewalletOvoCharge(chargeData);
+    history.push(
+      `/etalase/${chargeData.category}/order/status/${chargeData.reference_id}`
+    );
+    dispatch({ type: EWALLET_CHARGE, payload: data });
   } catch (error) {
     console.log(error);
   }

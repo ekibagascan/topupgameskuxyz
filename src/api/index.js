@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "https://topupgamesku.herokuapp.com" });
+const API = axios.create({ baseURL: "https://1ca6-115-178-227-142.ngrok.io" });
 
 export const fetchAllSlides = () => API.get(`/api/slides`);
 
@@ -15,4 +15,6 @@ export const createOrder = (order) => API.post(`/api/orders`, order);
 export const fetchOrder = (id) => API.get(`/api/orders/order/${id}`);
 
 export const ewalletCharge = (chargeData) =>
-  API.post(`https://api.xendit.co/ewallets/charges`, chargeData);
+  API.post(`/api/transactions/ewallets`, chargeData);
+export const ewalletOvoCharge = (chargeData) =>
+  API.post(`/api/transactions/ewallets/charges`, chargeData);
