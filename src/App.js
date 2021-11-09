@@ -23,16 +23,7 @@ const App = () => {
               exact
               component={EWalletForm}
             />
-            <Route
-              path="/etalase/:name/order/status/:id"
-              exact
-              component={PaymentScreen}
-            />
-            <Route
-              path="/etalase/:name/order/failure/:id"
-              exact
-              component={PaymentScreen}
-            />
+            <Route path="/order/status/:id" exact component={PaymentScreen} />
             <Footer />
           </>
         </Switch>

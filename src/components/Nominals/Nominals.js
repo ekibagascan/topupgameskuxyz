@@ -9,6 +9,7 @@ import {
 import { styled } from "@mui/material/styles";
 import CheckIcon from "@mui/icons-material/Check";
 import { useDispatch, useSelector } from "react-redux";
+import NumberFormat from "react-number-format";
 
 import { getProduct } from "../../actions/products";
 import PaymentMethod from "../PaymentMethod/PaymentMethod";
@@ -16,6 +17,7 @@ import PaymentMethod from "../PaymentMethod/PaymentMethod";
 const MyPaper = styled(Paper)(() => ({
   width: "100%",
   marginBottom: "20px",
+  boxShadow: `rgba(0, 0, 0, 0.25) 0px 2px 8px`,
 }));
 
 const Title = styled(Typography)(({ theme }) => ({
@@ -39,6 +41,7 @@ const Voucher = styled(Grid)(() => ({
 }));
 const ProductName = styled(Typography)(({ theme }) => ({
   fontWeight: 550,
+  fontFamily: "Verdana",
   [theme.breakpoints.down("sm")]: {
     fontSize: "0.7rem",
     fontWeight: 550,
@@ -46,6 +49,20 @@ const ProductName = styled(Typography)(({ theme }) => ({
   [theme.breakpoints.down("xs")]: {
     fontSize: "0.5rem",
     fontWeight: 500,
+  },
+}));
+const ProductPrice = styled(Typography)(({ theme }) => ({
+  fontWeight: 500,
+  fontFamily: "Verdana",
+  color: "#316B83",
+  fontSize: "0.76rem",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "0.65rem",
+    fontWeight: 400,
+  },
+  [theme.breakpoints.down("xs")]: {
+    fontSize: "0.5rem",
+    fontWeight: 300,
   },
 }));
 
@@ -67,7 +84,7 @@ const Nominals = ({ products, category, productData, setProductData }) => {
     <Grid>
       <MyPaper elevation={1}>
         <Title variant="h6">
-          2. {category.form === "none" ? "Pilih Edisi" : "Pilih Nominal Top Up"}
+          {category.form === "none" ? "Pilih Edisi" : "Pilih Nominal Top Up"}
         </Title>
         <ProductContainer
           container
@@ -113,10 +130,25 @@ const Nominals = ({ products, category, productData, setProductData }) => {
                 ) : null}
                 <ProductName
                   variant="body2"
-                  sx={{ textAlign: "center", padding: 1 }}
+                  sx={{ textAlign: "center", padding: 1, paddingBottom: 0 }}
                 >
                   {product.name}
                 </ProductName>
+                <ProductPrice variant="subtitle" sx={{ textAlign: "center" }}>
+                  <NumberFormat
+                    value={product.price}
+                    displayType="text"
+                    thousandSeparator="."
+                    prefix="Rp."
+                    mask=""
+                    allowLeadingZeros={false}
+                    allowEmptyFormatting={false}
+                    fixedDecimalScale={false}
+                    isNumericString={false}
+                    allowNegative={true}
+                    decimalSeparator=","
+                  />
+                </ProductPrice>
               </ListItemButton>
             ))}
           </Voucher>

@@ -18,6 +18,7 @@ import NumberFormat from "react-number-format";
 
 import { getOrder } from "../../actions/orders";
 import { EWalletsCharge } from "../../actions/e-wallets";
+import { QrisCharge } from "../../actions/qris";
 import tpg from "../../assets/images/tpg.svg";
 import payments from "../../components/payments";
 
@@ -78,16 +79,13 @@ const EWalletForm = () => {
   const { id } = useParams();
   const [chargeData, setChargeData] = useState({
     reference_id: "",
-    currency: "",
     amount: "",
-    checkout_method: "ONE_TIME_PAYMENT",
     channel_code: "",
     mobile_number: "",
-    channel_properties: {
-      mobile_number: "",
-      success_redirect_url: "",
-    },
-    category: "",
+  });
+  const [qrisData, setQrisData] = useState({
+    external_id: "",
+    amount: "",
   });
 
   useEffect(() => {
@@ -97,18 +95,10 @@ const EWalletForm = () => {
   const handleOvoInput = (e) => {
     setChargeData({
       ...chargeData,
-      reference_id: order._id,
-      currency: "IDR",
-      amount: order.totalPrice,
       mobile_number: e.target.value,
-      checkout_method: "ONE_TIME_PAYMENT",
+      reference_id: order._id,
+      amount: order.totalPrice,
       channel_code: "ID_OVO",
-      channel_properties: {
-        mobile_number: e.target.value,
-        success_redirect_url: `http://localhost:3000/etalase/${order.category}/status/${order._id}`,
-        failure_redicect_url: `http://localhost:3000/etalase/${order.category}/failure/${order._id}`,
-      },
-      category: order.category,
     });
   };
 
@@ -117,27 +107,32 @@ const EWalletForm = () => {
       setChargeData({
         ...chargeData,
         reference_id: order._id,
-        currency: "IDR",
         amount: order.totalPrice,
-        checkout_method: "ONE_TIME_PAYMENT",
         channel_code:
           order.paymentMethod === "ShopeePay"
             ? "ID_SHOPEEPAY"
             : order.paymentMethod === "Dana"
             ? "ID_DANA"
-            : "ID_LINKAJA",
-        channel_properties: {
-          success_redirect_url: `https://topupgamesku.xyz/etalase/${order.category}/status/${order._id}`,
-        },
-        category: order.category,
+            : order.paymentMethod === "LinkAja"
+            ? "ID_LINKAJA"
+            : null,
       });
-    }
+    } else return null;
+    if (order.paymentMethod === "Qris") {
+      setQrisData({
+        ...qrisData,
+        external_id: order._id,
+        amount: order.totalPrice,
+      });
+    } else return null;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (chargeData) {
+    if (chargeData.channel_code !== null) {
       dispatch(EWalletsCharge({ ...chargeData }, history));
+    } else {
+      dispatch(QrisCharge({ ...qrisData }, history));
     }
   };
 
@@ -207,11 +202,14 @@ const EWalletForm = () => {
                     }}
                   >
                     {order.paymentMethod === "Ovo" ? (
-                      <InputField
-                        onChange={handleOvoInput}
+                      <NumberFormat
                         label="Masukkan nomor ponsel OVO"
-                        sx={{ margin: "8px auto", width: "100%" }}
+                        sx={{ width: "100%", margin: "8px auto" }}
                         helperText="Pastikan nomor ponsel sama dengan nomor yang terdaftar pada OVO Wallet kamu ya 👌."
+                        format="+62###########"
+                        allowEmptyFormatting={true}
+                        customInput={InputField}
+                        onChange={handleOvoInput}
                       />
                     ) : (
                       <Title textAlign="center" sx={{ marginBottom: "10px" }}>

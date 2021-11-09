@@ -18,4 +18,5 @@ export const START_LOADING = "START_LOADING";
 export const END_LOADING = "END_LOADING";
 
 export const EWALLET_CHARGE = "EWALLET_CHARGE";
+export const QRIS_CHARGE = "QRIS_CHARGE";
 export const GET_STATUS = "GET_STATUS";

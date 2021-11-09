@@ -6,6 +6,7 @@ import {
   CardMedia,
   Typography,
   Grow,
+  Skeleton,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Color from "color";
@@ -40,6 +41,24 @@ const MyCard = styled(Card)(({ color, theme }) => ({
     width: "90px",
   },
 }));
+
+const SActionArea = styled(CardActionArea)(({ theme }) => ({
+  borderRadius: "15px",
+  transition: "0.2s",
+  [theme.breakpoints.down("xs")]: {
+    height: "90px",
+    width: "90px",
+  },
+}));
+const SCard = styled(Card)(({ theme }) => ({
+  borderRadius: "10px",
+  boxShadow: "none",
+  [theme.breakpoints.down("xs")]: {
+    height: "90px",
+    width: "90px",
+  },
+}));
+
 const Media = styled(CardMedia)(({ theme }) => ({
   height: "100%",
   [theme.breakpoints.down("xs")]: {
@@ -57,34 +76,88 @@ const AppName = styled(Typography)(({ theme }) => ({
   },
 }));
 
-const GameCategory = ({ categorySection, categories }) => {
+const MySkeleton = styled(Skeleton)(({ theme }) => ({
+  borderRadius: "8px",
+  width: 200,
+  height: 155,
+  [theme.breakpoints.down("sm")]: {
+    width: 120,
+    height: 105,
+  },
+}));
+
+const TitleSkeleton = styled(Skeleton)(({ theme }) => ({
+  width: 170,
+  height: 35,
+  marginBottom: "10px",
+  marginTop: "20px",
+  [theme.breakpoints.down("sm")]: {
+    marginTop: "5px",
+    width: 120,
+    height: 25,
+  },
+}));
+
+const SubtitleSkeleton = styled(Skeleton)(({ theme }) => ({
+  margin: "10px auto 5px",
+  width: 130,
+  height: 20,
+  [theme.breakpoints.down("sm")]: {
+    marginTop: "10px",
+    width: 90,
+    height: 15,
+  },
+}));
+
+const GameCategory = ({ categorySection, categories, isLoading }) => {
   return (
-    <MyContainer
-      container
-      alignitems="center"
-      alignContent="center"
-      justifyItems="center"
-      spacing={{ xs: 1, sm: 2, md: 4 }}
-      rowSpacing={{ xs: 3, sm: 3, md: 4 }}
-      columnSpacing={{ xs: 2, sm: 3, md: 4 }}
-    >
-      {categories.map((c) =>
-        c?.category === categorySection ? (
-          <Grow in key={c?._id}>
-            <Grid item xs={4} sm={3} lg={2}>
-              <ActionArea>
-                <MyCard>
-                  <Link to={`/etalase/${c?.name}`}>
-                    <Media component="img" image={c?.image} title={c?.name} />
-                  </Link>
-                </MyCard>
-              </ActionArea>
-              <AppName spacing={{ xs: 0.5, sm: 1, md: 3 }}>{c.name}</AppName>
-            </Grid>
-          </Grow>
-        ) : null
-      )}
-    </MyContainer>
+    <>
+      {isLoading ? <TitleSkeleton animation="wave" variant="text" /> : null}
+      <MyContainer
+        container
+        alignitems="center"
+        alignContent="center"
+        justifyItems="center"
+        spacing={{ xs: 1, sm: 2, md: 4 }}
+        rowSpacing={{ xs: 3, sm: 3, md: 4 }}
+        columnSpacing={{ xs: 2, sm: 3, md: 4 }}
+      >
+        {categories.map((c) =>
+          c?.category === categorySection ? (
+            <Grow in key={c?._id}>
+              <Grid item xs={4} sm={3} lg={2}>
+                {isLoading ? (
+                  <SActionArea>
+                    <SCard>
+                      <MySkeleton animation="wave" variant="rectangular" />
+                    </SCard>
+                  </SActionArea>
+                ) : (
+                  <ActionArea>
+                    <MyCard>
+                      <Link to={`/etalase/${c?.name}`}>
+                        <Media
+                          component="img"
+                          image={c?.image}
+                          title={c?.name}
+                        />
+                      </Link>
+                    </MyCard>
+                  </ActionArea>
+                )}
+                {isLoading ? (
+                  <SubtitleSkeleton animation="wave" variant="text" />
+                ) : (
+                  <AppName spacing={{ xs: 0.5, sm: 1, md: 3 }}>
+                    {c.name}
+                  </AppName>
+                )}
+              </Grid>
+            </Grow>
+          ) : null
+        )}
+      </MyContainer>
+    </>
   );
 };
 

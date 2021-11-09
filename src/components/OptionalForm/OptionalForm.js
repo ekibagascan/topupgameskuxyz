@@ -5,6 +5,7 @@ import { styled } from "@mui/material/styles";
 const MyPaper = styled(Paper)(() => ({
   width: "100%",
   marginBottom: "20px",
+  boxShadow: `rgba(0, 0, 0, 0.25) 0px 2px 8px`,
 }));
 
 const Title = styled(Typography)(({ theme }) => ({

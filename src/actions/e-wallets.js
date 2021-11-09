@@ -6,9 +6,8 @@ export const EWalletsCharge = (chargeData, history) => async (dispatch) => {
     dispatch({ type: START_LOADING });
 
     const { data } = await api.ewalletsCharge(chargeData);
-    history.push(
-      `/etalase/${chargeData.category}/order/status/${chargeData.reference_id}`
-    );
+
+    history.push(`/order/status/${chargeData.reference_id}`);
     dispatch({ type: EWALLET_CHARGE, payload: data });
   } catch (error) {
     console.log(error);

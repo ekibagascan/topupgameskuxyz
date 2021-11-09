@@ -1,58 +1,59 @@
-import React from 'react'
+import React from "react";
 import {
   Paper,
   Typography,
   Grid,
   ListItemButton,
   IconButton,
-} from '@mui/material'
-import { styled } from '@mui/material/styles'
-import CheckIcon from '@mui/icons-material/Check'
-import NumberFormat from 'react-number-format'
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import CheckIcon from "@mui/icons-material/Check";
+import NumberFormat from "react-number-format";
 
-import payments from '../payments'
+import payments from "../payments";
 
 const MyPaper = styled(Paper)(() => ({
-  width: '100%',
-  marginBottom: '20px',
-}))
+  width: "100%",
+  marginBottom: "20px",
+  boxShadow: `rgba(0, 0, 0, 0.25) 0px 2px 8px`,
+}));
 const Title = styled(Typography)(({ theme }) => ({
   paddingTop: 15,
   paddingLeft: 17,
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '0.9rem',
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "0.9rem",
     fontWeight: 550,
   },
-}))
+}));
 const ProductContainer = styled(Grid)(() => ({
-  display: 'flex',
-  padding: '20px 5px',
-}))
+  display: "flex",
+  padding: "20px 5px",
+}));
 const PaymentsList = styled(Grid)(() => ({
   paddingBottom: 5,
-}))
+}));
 const Price = styled(Typography)(({ theme }) => ({
   fontWeight: 500,
-  fontSize: '1rem',
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '0.65rem',
+  fontSize: "1rem",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "0.65rem",
   },
-}))
-const PayLogo = styled('img')(({ theme }) => ({
+}));
+const PayLogo = styled("img")(({ theme }) => ({
   marginLeft: 2,
-  display: 'flex',
-  height: '40px',
-  [theme.breakpoints.down('sm')]: {
-    height: '25px',
+  display: "flex",
+  height: "40px",
+  [theme.breakpoints.down("sm")]: {
+    height: "25px",
     marginLeft: 0.8,
   },
-}))
+}));
 
 const PaymentMethod = ({ product, currentId, productData, setProductData }) => {
-  const [selectedIndex, setSelectedIndex] = React.useState('')
+  const [selectedIndex, setSelectedIndex] = React.useState("");
 
   const handleListItemClick = (name, index, discount, max) => {
-    setSelectedIndex(index)
+    setSelectedIndex(index);
 
     setProductData({
       ...productData,
@@ -61,26 +62,26 @@ const PaymentMethod = ({ product, currentId, productData, setProductData }) => {
           ? product?.price
           : handleFinalPrice(),
       paymentMethod: name,
-    })
-  }
+    });
+  };
 
   const handleDiscount = () => {
-    return Math.abs((5 / 100) * 100).toFixed(0)
-  }
+    return Math.abs((5 / 100) * 100).toFixed(0);
+  };
 
   const handleFinalPrice = () => {
     return (product?.price - (product.price * handleDiscount()) / 100).toFixed(
       0
-    )
-  }
+    );
+  };
 
   return (
     <MyPaper elevation={1}>
-      <Title variant='h6'>3. Pilih Metode Pembayaran</Title>
+      <Title variant="h6">Pilih Metode Pembayaran</Title>
       <ProductContainer
         container
-        justifyContent='center'
-        alignItems='stretch'
+        justifyContent="center"
+        alignItems="stretch"
         spacing={1}
       >
         <PaymentsList item xs={12}>
@@ -99,61 +100,61 @@ const PaymentMethod = ({ product, currentId, productData, setProductData }) => {
               sx={{
                 margin: 1,
                 border: 1,
-                borderColor: 'secondary.main',
+                borderColor: "secondary.main",
                 borderRadius: 1,
               }}
             >
               {selectedIndex === payment._id ? (
                 <IconButton
-                  component='span'
+                  component="span"
                   sx={{
-                    position: 'absolute',
+                    position: "absolute",
                     left: 2,
                     top: 2,
-                    borderRadius: '15px',
-                    backgroundColor: '#9147FF',
+                    borderRadius: "15px",
+                    backgroundColor: "#9147FF",
                   }}
                 >
                   <CheckIcon
                     sx={{
-                      position: 'absolute',
+                      position: "absolute",
                       height: 16,
-                      color: '#fff',
+                      color: "#fff",
                     }}
                   />
                 </IconButton>
               ) : null}
               <Grid
                 container
-                justifyContent='space-between'
-                alignItems='center'
-                sx={{ display: 'flex' }}
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{ display: "flex" }}
               >
-                <Grid item xs={8} sx={{ margin: 'auto' }}>
+                <Grid item xs={8} sx={{ margin: "auto" }}>
                   <PayLogo alt={payment?.name} src={payment?.image} />
                 </Grid>
 
-                <Grid item xs={4} sx={{ margin: 'auto', textAlign: 'end' }}>
+                <Grid item xs={4} sx={{ margin: "auto", textAlign: "end" }}>
                   {product?._id === currentId ? (
-                    <Price sx={{ margin: 'auto' }}>
-                      {' '}
-                      Harga:{' '}
+                    <Price sx={{ margin: "auto" }}>
+                      {" "}
+                      Harga:{" "}
                       <NumberFormat
                         value={
                           !payment.discount || product.price >= payment.max
                             ? product.price
                             : handleFinalPrice()
                         }
-                        displayType='text'
-                        thousandSeparator='.'
-                        prefix='Rp.'
-                        mask=''
+                        displayType="text"
+                        thousandSeparator="."
+                        prefix="Rp."
+                        mask=""
                         allowLeadingZeros={false}
                         allowEmptyFormatting={false}
                         fixedDecimalScale={false}
                         isNumericString={false}
                         allowNegative={true}
-                        decimalSeparator=','
+                        decimalSeparator=","
                       />
                     </Price>
                   ) : null}
@@ -164,7 +165,7 @@ const PaymentMethod = ({ product, currentId, productData, setProductData }) => {
         </PaymentsList>
       </ProductContainer>
     </MyPaper>
-  )
-}
+  );
+};
 
-export default PaymentMethod
+export default PaymentMethod;

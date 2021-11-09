@@ -13,6 +13,7 @@ import NumberFormat from "react-number-format";
 const MyPaper = styled(Paper)(() => ({
   width: "100%",
   marginBottom: "20px",
+  boxShadow: `rgba(0, 0, 0, 0.25) 0px 2px 8px`,
 }));
 
 const Title = styled(Typography)(({ theme }) => ({
@@ -74,7 +75,7 @@ const InputID = ({ category, productData, setProductData }) => {
 
   return (
     <MyPaper key={category._id} elevation={1}>
-      <Title variant="h6">1. {category.title}</Title>
+      <Title variant="h6">{category.title}</Title>
       <InputContainer container alignItems="stretch" spacing={{ xs: 1, md: 3 }}>
         <InputForm item xs={12}>
           <InputField

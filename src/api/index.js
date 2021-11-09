@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "https://d31c-114-79-16-30.ngrok.io" });
+const API = axios.create({ baseURL: "https://cd98-114-125-77-151.ngrok.io" });
 
 export const fetchAllSlides = () => API.get(`/api/slides`);
 
@@ -16,3 +16,6 @@ export const fetchOrder = (id) => API.get(`/api/orders/order/${id}`);
 
 export const ewalletsCharge = (chargeData) =>
   API.post("/api/transactions/ewallets/charges", chargeData);
+
+export const qrisCharge = (chargeData) =>
+  API.post("/api/transactions/qris/charges", chargeData);

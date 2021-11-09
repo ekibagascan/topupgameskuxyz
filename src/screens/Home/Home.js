@@ -1,99 +1,115 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { Grid, Container, Typography } from '@mui/material'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useEffect, useState, useRef } from "react";
+import { Grid, Container, Typography } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
 
-import { getAllSlides } from '../../actions/slides'
-import { getAllCategories } from '../../actions/categories'
-import SlideShow from '../../components/SlideShow/SlideShow'
-import GameCategory from '../../components/GameCategory/GameCategory'
+import { getAllSlides } from "../../actions/slides";
+import { getAllCategories } from "../../actions/categories";
+import SlideShow from "../../components/SlideShow/SlideShow";
+import GameCategory from "../../components/GameCategory/GameCategory";
 
 function useIsMounted() {
-  const isMounted = useRef(false)
+  const isMounted = useRef(false);
   useEffect(() => {
-    isMounted.current = true
-    return () => (isMounted.current = false)
-  }, [])
-  return isMounted
+    isMounted.current = true;
+    return () => (isMounted.current = false);
+  }, []);
+  return isMounted;
 }
 
 const Home = () => {
-  const dispatch = useDispatch()
-  const { slides } = useSelector((state) => state.slides)
-  const { categories, isLoading } = useSelector((state) => state.categories)
-  const [state, setState] = useState('loading (4 sec)...')
-  const isMounted = useIsMounted()
+  const dispatch = useDispatch();
+  const { slides } = useSelector((state) => state.slides);
+  const { categories, isLoading } = useSelector((state) => state.categories);
+  const [state, setState] = useState("loading (4 sec)...");
+  const isMounted = useIsMounted();
 
   useEffect(() => {
-    dispatch(getAllCategories())
+    dispatch(getAllCategories());
     dispatch(getAllSlides()).then((data) => {
       if (isMounted.current) {
-        setState(data)
+        setState(data);
       }
-      return { state }
-    })
-  }, [dispatch, state, isMounted])
+      return { state };
+    });
+  }, [dispatch, state, isMounted]);
 
-  if (!slides) return null
+  if (!slides) return null;
 
-  if (!categories) return null
+  if (!categories) return null;
 
   return (
-    <Container maxWidth='lg' sx={{ paddingLeft: 0, paddingRight: 0 }}>
+    <Container maxWidth="lg" sx={{ paddingLeft: 0, paddingRight: 0 }}>
       <Grid
         container
-        justifyContent='space-between'
-        aligntitems='center'
+        justifyContent="space-between"
+        aligntitems="center"
         spacing={0}
         sx={{
-          marginTop: '50px',
-          display: 'flex',
-          justifyContent: 'space-between',
+          marginTop: "50px",
+          display: "flex",
+          justifyContent: "space-between",
         }}
       >
-        <SlideShow slides={slides} />
+        <SlideShow slides={slides} isLoading={isLoading} />
 
         <Grid>
           {isLoading ? null : (
             <Typography
-              variant='h6'
-              sx={{ color: '#fff', marginBottom: '8px', marginTop: '5px' }}
+              variant="h6"
+              sx={{ marginBottom: "8px", marginTop: "5px" }}
             >
               Trending
             </Typography>
           )}
 
-          <GameCategory categories={categories} categorySection='trending' />
+          <GameCategory
+            categories={categories}
+            categorySection="trending"
+            isLoading={isLoading}
+          />
           {isLoading ? null : (
             <Typography
-              variant='h6'
-              sx={{ color: '#fff', marginBottom: '8px', marginTop: '20px' }}
+              variant="h6"
+              sx={{ marginBottom: "8px", marginTop: "20px" }}
             >
               Top Games
             </Typography>
           )}
-          <GameCategory categories={categories} categorySection='topgames' />
+          <GameCategory
+            categories={categories}
+            categorySection="topgames"
+            isLoading={isLoading}
+          />
           {isLoading ? null : (
             <Typography
-              variant='h6'
-              sx={{ color: '#fff', marginBottom: '8px', marginTop: '20px' }}
+              variant="h6"
+              sx={{ marginBottom: "8px", marginTop: "20px" }}
             >
               Livestream App
             </Typography>
           )}
-          <GameCategory categories={categories} categorySection='livestream' />
+          <GameCategory
+            categories={categories}
+            categorySection="livestream"
+            isLoading={isLoading}
+          />
           {isLoading ? null : (
             <Typography
-              variant='h6'
-              sx={{ color: '#fff', marginBottom: '8px', marginTop: '20px' }}
+              variant="h6"
+              sx={{ marginBottom: "8px", marginTop: "20px" }}
             >
               Voucher Games
             </Typography>
           )}
-          <GameCategory categories={categories} categorySection='voucher' />
+          <GameCategory
+            categories={categories}
+            categorySection="voucher"
+            isLoading={isLoading}
+          />
         </Grid>
       </Grid>
     </Container>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
