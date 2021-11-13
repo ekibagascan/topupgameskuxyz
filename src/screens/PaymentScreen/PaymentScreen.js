@@ -15,9 +15,10 @@ import {
   Link,
   Skeleton,
   Box,
+  Button,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import NumberFormat from "react-number-format";
 
@@ -25,6 +26,7 @@ import paid from "../../assets/images/PAID.svg";
 import check from "../../assets/images/checklist.svg";
 import wa from "../../assets/images/wa.svg";
 import payments from "../../components/payments";
+import { getCallback } from "../../actions/callbacks";
 import { getOrder } from "../../actions/orders";
 
 const TitleDetails = styled(Typography)(({ theme }) => ({
@@ -66,7 +68,6 @@ const NominalOrderList = styled(Typography)(({ theme }) => ({
     fontSize: "0.9rem",
   },
 }));
-
 const StatusOrder = styled(Typography)(({ theme }) => ({
   textAlign: "end",
   fontSize: "1.6rem",
@@ -86,7 +87,9 @@ const GuidanceText = styled(Typography)(({ theme }) => ({
 
 const PaymentScreen = () => {
   const dispatch = useDispatch();
-  const { order, isLoading } = useSelector((state) => state.orders);
+  const history = useHistory();
+  const { callback, isLoading } = useSelector((state) => state.callbacks);
+  const { order } = useSelector((state) => state.orders);
   const { id } = useParams();
   const [open, setOpen] = React.useState(false);
 
@@ -98,10 +101,16 @@ const PaymentScreen = () => {
     setOpen(false);
   };
 
+  const handleBack = () => {
+    history.push("/");
+  };
+
   useEffect(() => {
     dispatch(getOrder(id));
+    dispatch(getCallback(id));
   }, [dispatch, id]);
 
+  if (!callback) return null;
   if (!order) return null;
 
   if (isLoading)
@@ -127,7 +136,14 @@ const PaymentScreen = () => {
           spacing={3}
         >
           <Grid item xs={12}>
-            <Paper elevation={2} sx={{ marginTop: "70px", padding: 2 }}>
+            <Paper
+              elevation={2}
+              sx={{
+                marginTop: "70px",
+                padding: 2,
+                boxShadow: `rgba(0, 0, 0, 0.25) 0px 2px 8px`,
+              }}
+            >
               <Grid>
                 <Typography
                   variant="h6"
@@ -146,9 +162,9 @@ const PaymentScreen = () => {
                     <TitleDetails sx={{ color: "text.secondary" }}>
                       ID player:
                     </TitleDetails>
-                    <DetailsOrder>{order.playerId}</DetailsOrder>
+                    <DetailsOrder>{order?.playerId}</DetailsOrder>
                   </Grid>
-                  {order.zoneId ? (
+                  {order?.zoneId ? (
                     <Grid
                       item
                       xs={12}
@@ -158,10 +174,10 @@ const PaymentScreen = () => {
                       <TitleDetails sx={{ color: "text.secondary" }}>
                         Zone ID:
                       </TitleDetails>
-                      <DetailsOrder>{order.zoneId}</DetailsOrder>
+                      <DetailsOrder>{order?.zoneId}</DetailsOrder>
                     </Grid>
                   ) : null}
-                  {order.server ? (
+                  {order?.server ? (
                     <Grid
                       item
                       xs={12}
@@ -171,7 +187,7 @@ const PaymentScreen = () => {
                       <TitleDetails sx={{ color: "text.secondary" }}>
                         Server/Platform:
                       </TitleDetails>
-                      <DetailsOrder>{order.server}</DetailsOrder>
+                      <DetailsOrder>{order?.server}</DetailsOrder>
                     </Grid>
                   ) : null}
                   <Grid
@@ -183,7 +199,7 @@ const PaymentScreen = () => {
                     <TitleDetails sx={{ color: "text.secondary" }}>
                       Nama item:
                     </TitleDetails>
-                    <DetailsOrder>{order.productName}</DetailsOrder>
+                    <DetailsOrder>{order?.productName}</DetailsOrder>
                   </Grid>
                   <Grid
                     item
@@ -197,7 +213,7 @@ const PaymentScreen = () => {
                     <DetailsOrder>
                       {" "}
                       <NumberFormat
-                        value={order.totalPrice}
+                        value={order?.totalPrice}
                         displayType="text"
                         thousandSeparator="."
                         prefix="Rp."
@@ -274,17 +290,18 @@ const PaymentScreen = () => {
                     sx={{
                       fontWeight: 600,
                       color:
-                        order.isDelivered && order.isPaid
+                        (callback.data.status === "SUCCEEDED") &
+                        order.isDelivered
                           ? "#9147FF"
-                          : order.isPaid
+                          : callback.data.status === "SUCCEEDED"
                           ? "#9147FF"
                           : "text.secondary",
                     }}
                   >
-                    {order.isDelivered && order.isPaid
-                      ? "Dah Terkirim Ka🥳"
-                      : order.isPaid
-                      ? "Dah Lunas Ka😎"
+                    {(callback.data.status === "SUCCEEDED") & order.isDelivered
+                      ? "Order Sukses🥳"
+                      : callback.data.status === "SUCCEEDED"
+                      ? "Pembayaran Berhasil😎"
                       : "Lum bayar Ka😁"}
                   </StatusOrder>
                 </Grid>
@@ -298,27 +315,29 @@ const PaymentScreen = () => {
                         xs={12}
                         sx={{ marginTop: "20px", textAlign: "center" }}
                       >
-                        {order.isDelivered && order.isPaid ? (
+                        {(callback.data.status === "SUCCEEDED") &
+                        order.isDelivered ? (
                           <ImageListItem sx={{ width: "80px" }}>
                             <img alt="successfull" src={check} loading="lazy" />
                           </ImageListItem>
-                        ) : order.isPaid ? (
-                          <ImageListItem sx={{ width: "80px" }}>
+                        ) : callback.data.status === "SUCCEEDED" ? (
+                          <ImageListItem sx={{ width: "200px" }}>
                             <img alt="paid" src={paid} />
                           </ImageListItem>
-                        ) : (
+                        ) : !order.isPaid ? (
                           <Skeleton
                             sx={{ margin: "5px auto", bgcolor: "#25D366" }}
                             variant="circular"
                             width={40}
                             height={40}
                           />
-                        )}
+                        ) : null}
                       </Grid>
                     ) : null
                   )}
 
-                  {order.isDelivered && order.isPaid ? (
+                  {(callback.data.status === "SUCCEEDED") &
+                  order.isDelivered ? (
                     <Typography
                       sx={{
                         fontWeight: 500,
@@ -328,7 +347,7 @@ const PaymentScreen = () => {
                       {" "}
                       Order kamu sukses terkirim dan kamu siap naik level 😊.
                     </Typography>
-                  ) : order.isPaid ? (
+                  ) : callback.data.status === "SUCCEEDED" ? (
                     <Typography
                       sx={{
                         fontWeight: 500,
@@ -343,15 +362,33 @@ const PaymentScreen = () => {
                       <StepProcess sx={{ margin: "20px auto 5px" }}>
                         <strong>Proses Pembayaran</strong>
                       </StepProcess>
-                      <GuidanceText sx={{ margin: "0px auto 20px" }}>
-                        Silahkan check aplikasi{" "}
-                        <strong>{order.paymentMethod}</strong> kamu dan segera
-                        selesaikan pembayaranmu agar order dapat diproses ya.🤗
-                      </GuidanceText>
+                      {order.paymentMethod !== "Qris" ? (
+                        <GuidanceText sx={{ margin: "0px auto 20px" }}>
+                          Silahkan check aplikasi{" "}
+                          <strong>{order.paymentMethod}</strong> kamu dan segera
+                          selesaikan pembayaranmu agar order dapat diproses
+                          ya.🤗
+                        </GuidanceText>
+                      ) : null}
                     </Box>
                   )}
+                  {(callback.data.status === "SUCCEEDED") &
+                  order.isDelivered ? (
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      onClick={handleBack}
+                      sx={{
+                        borderRadius: "15px",
+                        backgroundColor: "#0F00FF",
+                        margin: "20px auto 20px",
+                      }}
+                    >
+                      Beli Lagi
+                    </Button>
+                  ) : null}
 
-                  <Grid>
+                  <Grid sx={{ marginTop: "10px" }}>
                     <Link
                       href="https://wa.me/+6288803890773"
                       target="_blank"

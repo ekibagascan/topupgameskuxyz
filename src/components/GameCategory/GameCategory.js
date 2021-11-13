@@ -109,10 +109,12 @@ const SubtitleSkeleton = styled(Skeleton)(({ theme }) => ({
   },
 }));
 
-const GameCategory = ({ categorySection, categories, isLoading }) => {
+const GameCategory = ({ categorySection, categories, isCategoryLoading }) => {
   return (
     <>
-      {isLoading ? <TitleSkeleton animation="wave" variant="text" /> : null}
+      {isCategoryLoading ? (
+        <TitleSkeleton animation="wave" variant="text" />
+      ) : null}
       <MyContainer
         container
         alignitems="center"
@@ -126,7 +128,7 @@ const GameCategory = ({ categorySection, categories, isLoading }) => {
           c?.category === categorySection ? (
             <Grow in key={c?._id}>
               <Grid item xs={4} sm={3} lg={2}>
-                {isLoading ? (
+                {isCategoryLoading ? (
                   <SActionArea>
                     <SCard>
                       <MySkeleton animation="wave" variant="rectangular" />
@@ -145,7 +147,7 @@ const GameCategory = ({ categorySection, categories, isLoading }) => {
                     </MyCard>
                   </ActionArea>
                 )}
-                {isLoading ? (
+                {isCategoryLoading ? (
                   <SubtitleSkeleton animation="wave" variant="text" />
                 ) : (
                   <AppName spacing={{ xs: 0.5, sm: 1, md: 3 }}>

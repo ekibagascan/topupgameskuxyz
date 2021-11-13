@@ -13,24 +13,28 @@ const BannerSkeleton = styled(Skeleton)(({ theme }) => ({
   },
 }));
 
-const SlideShow = ({ slides, isLoading }) => {
+const SlideShow = ({ slides, isSlideLoading }) => {
   return (
     <Grid alignitems="center" sx={{ margin: "15px auto" }}>
       <Carousel animation="slide" swipe="true" interval={5000}>
         {slides.map((slide) => (
-          <Slide key={slide._id} slide={slide} isLoading={isLoading} />
+          <Slide
+            key={slide._id}
+            slide={slide}
+            isSlideLoading={isSlideLoading}
+          />
         ))}
       </Carousel>
     </Grid>
   );
 };
 
-function Slide({ slide, isLoading }) {
+function Slide({ slide, isSlideLoading }) {
   return (
     <Grow in>
       <Link href={slide.link} rel="noreferrer" color="inherit" underline="none">
         <ImageListItem>
-          {isLoading ? (
+          {isSlideLoading ? (
             <BannerSkeleton animation="wave" variant="rectangular" />
           ) : (
             <img

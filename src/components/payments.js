@@ -16,6 +16,14 @@ const payments = [
   // },
   {
     _id: "1",
+    name: "Qris",
+    channelCode: "ID_QRIS",
+    country: ["id"],
+    discount: 0,
+    image: qris,
+  },
+  {
+    _id: "2",
     name: "Ovo",
     channelCode: "ID_OVO",
     country: ["id"],
@@ -23,7 +31,7 @@ const payments = [
     image: ovo,
   },
   {
-    _id: "2",
+    _id: "3",
     name: "Dana",
     channelCode: "ID_DANA",
     country: ["id"],
@@ -31,7 +39,7 @@ const payments = [
     image: dana,
   },
   {
-    _id: "3",
+    _id: "4",
     name: "ShopeePay",
     channelCode: "ID_SHOPEEPAY",
     country: ["id"],
@@ -39,20 +47,12 @@ const payments = [
     image: shopeepay,
   },
   {
-    _id: "4",
+    _id: "5",
     name: "LinkAja",
     channelCode: "ID_LINKAJA",
     country: ["id"],
     discount: 0,
     image: linkaja,
-  },
-  {
-    _id: "5",
-    name: "Qris",
-    channelCode: "ID_QRIS",
-    country: ["id"],
-    discount: 0,
-    image: qris,
   },
 ];
 

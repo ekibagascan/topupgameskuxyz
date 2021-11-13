@@ -14,9 +14,15 @@ export const FETCH_CATEGORY = "FETCH_CATEGORY";
 export const CREATE_ORDER = "CREATE_ORDER";
 export const GET_ORDER = "GET_ORDER";
 
+export const FETCH_CALLBACK = "FETCH_CALLBACK";
+
 export const START_LOADING = "START_LOADING";
 export const END_LOADING = "END_LOADING";
 
 export const EWALLET_CHARGE = "EWALLET_CHARGE";
+export const FETCH_EWALLET_PAY_DATA = "FETCH_EWALLET_PAY_DATA";
+
 export const QRIS_CHARGE = "QRIS_CHARGE";
+export const FETCH_QRIS_PAY_DATA = "FETCH_QRIS_PAY_DATA";
+
 export const GET_STATUS = "GET_STATUS";

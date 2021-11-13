@@ -18,8 +18,10 @@ function useIsMounted() {
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { slides } = useSelector((state) => state.slides);
-  const { categories, isLoading } = useSelector((state) => state.categories);
+  const { slides, isSlideLoading } = useSelector((state) => state.slides);
+  const { categories, isCategoryLoading } = useSelector(
+    (state) => state.categories
+  );
   const [state, setState] = useState("loading (4 sec)...");
   const isMounted = useIsMounted();
 
@@ -50,10 +52,10 @@ const Home = () => {
           justifyContent: "space-between",
         }}
       >
-        <SlideShow slides={slides} isLoading={isLoading} />
+        <SlideShow slides={slides} isSlideLoading={isSlideLoading} />
 
         <Grid>
-          {isLoading ? null : (
+          {isCategoryLoading ? null : (
             <Typography
               variant="h6"
               sx={{ marginBottom: "8px", marginTop: "5px" }}
@@ -65,9 +67,9 @@ const Home = () => {
           <GameCategory
             categories={categories}
             categorySection="trending"
-            isLoading={isLoading}
+            isLoading={isCategoryLoading}
           />
-          {isLoading ? null : (
+          {isCategoryLoading ? null : (
             <Typography
               variant="h6"
               sx={{ marginBottom: "8px", marginTop: "20px" }}
@@ -78,9 +80,9 @@ const Home = () => {
           <GameCategory
             categories={categories}
             categorySection="topgames"
-            isLoading={isLoading}
+            isCategoryLoading={isCategoryLoading}
           />
-          {isLoading ? null : (
+          {isCategoryLoading ? null : (
             <Typography
               variant="h6"
               sx={{ marginBottom: "8px", marginTop: "20px" }}
@@ -91,9 +93,9 @@ const Home = () => {
           <GameCategory
             categories={categories}
             categorySection="livestream"
-            isLoading={isLoading}
+            isCategoryLoading={isCategoryLoading}
           />
-          {isLoading ? null : (
+          {isCategoryLoading ? null : (
             <Typography
               variant="h6"
               sx={{ marginBottom: "8px", marginTop: "20px" }}
@@ -104,7 +106,7 @@ const Home = () => {
           <GameCategory
             categories={categories}
             categorySection="voucher"
-            isLoading={isLoading}
+            isCategoryLoading={isCategoryLoading}
           />
         </Grid>
       </Grid>

@@ -18,11 +18,7 @@ const App = () => {
             <Header />
             <Route path="/" exact component={Home} />
             <Route path="/etalase/:name" exact component={Etalase} />
-            <Route
-              path="/etalase/:name/order/pay/:id"
-              exact
-              component={EWalletForm}
-            />
+            <Route path="/order/pay/:id" exact component={EWalletForm} />
             <Route path="/order/status/:id" exact component={PaymentScreen} />
             <Footer />
           </>

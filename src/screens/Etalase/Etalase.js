@@ -1,13 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useHistory } from "react-router-dom";
-import {
-  Grow,
-  Grid,
-  Container,
-  Backdrop,
-  CircularProgress,
-} from "@mui/material";
+import { Grow, Grid, Container } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 import InputID from "../../components/InputID/InputID";
@@ -15,7 +9,8 @@ import Nominals from "../../components/Nominals/Nominals";
 import OptionalForm from "../../components/OptionalForm/OptionalForm";
 import { getCategory } from "../../actions/categories";
 import { getProducts } from "../../actions/products";
-import { createOrder } from "../../actions/orders";
+import { QrisCharge } from "../../actions/qris";
+import { EWalletsCharge } from "../../actions/e-wallets";
 
 const MainContainer = styled(Container)(() => ({
   marginTop: "80px",
@@ -31,7 +26,6 @@ const GridEtalase = styled(Grid)(() => ({
   alignItems: "center",
   display: "flex",
 }));
-const MyForm = styled("form")(() => ({}));
 
 const initialState = {
   playerId: "",
@@ -43,6 +37,12 @@ const initialState = {
   paymentMethod: "",
   category: "",
   emailorPhone: "",
+
+  reference_id: "",
+  amount: "",
+  channel_code: "",
+  mobile_number: "",
+  external_id: "",
 };
 
 function useIsMounted() {
@@ -58,14 +58,21 @@ const Etalase = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { name } = useParams();
+  const isMounted = useIsMounted();
+  const timer = React.useRef();
   const { products } = useSelector((state) => state.products);
   const { category } = useSelector((state) => state.categories);
-  const [productData, setProductData] = useState(initialState);
   const [state, setState] = useState("loading (4 sec)...");
-  const isMounted = useIsMounted();
+  const [productData, setProductData] = useState(initialState);
+  const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
-    dispatch(getCategory(name));
+    dispatch(getCategory(name)).then((data) => {
+      if (isMounted.current) {
+        setState(data);
+      }
+      return { state };
+    });
     dispatch(getProducts(name)).then((data) => {
       if (isMounted.current) {
         setState(data);
@@ -76,24 +83,27 @@ const Etalase = () => {
 
   if (!products) return "Belum ada produk";
 
+  const handleOvoInput = (e) => {
+    setProductData({
+      ...productData,
+      mobile_number: e.target.value,
+    });
+  };
+
   const handleSubmit = async (e) => {
+    setLoading(true);
+    timer.current = window.setTimeout(() => {
+      setLoading(false);
+    }, 2500);
     e.preventDefault();
-    if (productData) {
-      dispatch(createOrder({ ...productData }, history));
+    if (productData.channel_code !== null) {
+      dispatch(EWalletsCharge({ ...productData }, history));
+    } else {
+      dispatch(QrisCharge({ ...productData }, history));
     }
   };
 
-  if (!category)
-    return (
-      <Grid>
-        <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={true}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      </Grid>
-    );
+  if (!category) return null;
 
   return (
     <Grow in>
@@ -105,7 +115,7 @@ const Etalase = () => {
           spacing={{ xs: 1, sm: 1, md: 3 }}
         >
           <GridEtalase item xs={12}>
-            <MyForm noValidate autoComplete="off" onSubmit={handleSubmit}>
+            <form noValidate autoComplete="off" onSubmit={handleSubmit}>
               <InputID
                 category={category}
                 productData={productData}
@@ -117,13 +127,14 @@ const Etalase = () => {
                 category={category}
                 productData={productData}
                 setProductData={setProductData}
+                handleOvoInput={handleOvoInput}
               />
               <OptionalForm
-                category={category}
                 productData={productData}
                 setProductData={setProductData}
+                loading={loading}
               />
-            </MyForm>
+            </form>
           </GridEtalase>
         </GridContainer>
       </MainContainer>

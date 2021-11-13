@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Paper,
   Typography,
   Grid,
   ListItemButton,
   IconButton,
+  Collapse,
+  TextField,
+  CardContent,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CheckIcon from "@mui/icons-material/Check";
@@ -49,12 +52,47 @@ const PayLogo = styled("img")(({ theme }) => ({
   },
 }));
 
-const PaymentMethod = ({ product, currentId, productData, setProductData }) => {
-  const [selectedIndex, setSelectedIndex] = React.useState("");
+const InputField = styled(TextField)(({ theme }) => ({
+  "& label": {
+    fontSize: "0.8rem",
+  },
+  "& input:valid + fieldset": {
+    borderColor: "purple",
+    borderWidth: 1,
+  },
+  "& input:invalid + fieldset": {
+    borderColor: "red",
+    borderWidth: 1,
+  },
+  "& input:valid:focus + fieldset": {
+    borderLeftWidth: 6,
+    padding: "4px !important",
+  },
+  [theme.breakpoints.down("sm")]: {
+    "& label": {
+      fontSize: "0.8rem",
+    },
+    "& helperText": {
+      fontSize: "0.6rem",
+    },
+  },
+}));
+const Content = styled(CardContent)(() => ({
+  padding: "5px 10px",
+}));
+
+const PaymentMethod = ({
+  product,
+  currentId,
+  productData,
+  setProductData,
+  handleOvoInput,
+}) => {
+  const [selectedIndex, setSelectedIndex] = useState("");
+  const [expanded, setExpanded] = useState(false);
 
   const handleListItemClick = (name, index, discount, max) => {
     setSelectedIndex(index);
-
     setProductData({
       ...productData,
       totalPrice:
@@ -63,6 +101,9 @@ const PaymentMethod = ({ product, currentId, productData, setProductData }) => {
           : handleFinalPrice(),
       paymentMethod: name,
     });
+    if (name === "Ovo") {
+      setExpanded(!expanded);
+    }
   };
 
   const handleDiscount = () => {
@@ -86,81 +127,97 @@ const PaymentMethod = ({ product, currentId, productData, setProductData }) => {
       >
         <PaymentsList item xs={12}>
           {payments.map((payment) => (
-            <ListItemButton
-              key={payment._id}
-              selected={selectedIndex === payment._id}
-              onClick={() =>
-                handleListItemClick(
-                  payment.name,
-                  payment._id,
-                  payment.discount,
-                  payment.max
-                )
-              }
-              sx={{
-                margin: 1,
-                border: 1,
-                borderColor: "secondary.main",
-                borderRadius: 1,
-              }}
-            >
-              {selectedIndex === payment._id ? (
-                <IconButton
-                  component="span"
-                  sx={{
-                    position: "absolute",
-                    left: 2,
-                    top: 2,
-                    borderRadius: "15px",
-                    backgroundColor: "#9147FF",
-                  }}
-                >
-                  <CheckIcon
+            <Grid key={payment._id}>
+              <ListItemButton
+                selected={selectedIndex === payment._id}
+                onClick={() =>
+                  handleListItemClick(
+                    payment.name,
+                    payment._id,
+                    payment.discount,
+                    payment.max
+                  )
+                }
+                sx={{
+                  margin: 1,
+                  border: 1,
+                  borderColor: "secondary.main",
+                  borderRadius: 1,
+                }}
+              >
+                {selectedIndex === payment._id ? (
+                  <IconButton
+                    component="span"
                     sx={{
                       position: "absolute",
-                      height: 16,
-                      color: "#fff",
+                      left: 2,
+                      top: 2,
+                      borderRadius: "15px",
+                      backgroundColor: "#9147FF",
                     }}
-                  />
-                </IconButton>
-              ) : null}
-              <Grid
-                container
-                justifyContent="space-between"
-                alignItems="center"
-                sx={{ display: "flex" }}
-              >
-                <Grid item xs={8} sx={{ margin: "auto" }}>
-                  <PayLogo alt={payment?.name} src={payment?.image} />
-                </Grid>
+                  >
+                    <CheckIcon
+                      sx={{
+                        position: "absolute",
+                        height: 16,
+                        color: "#fff",
+                      }}
+                    />
+                  </IconButton>
+                ) : null}
+                <Grid
+                  container
+                  justifyContent="space-between"
+                  alignItems="center"
+                  sx={{ display: "flex" }}
+                >
+                  <Grid item xs={8} sx={{ margin: "auto" }}>
+                    <PayLogo alt={payment?.name} src={payment?.image} />
+                  </Grid>
 
-                <Grid item xs={4} sx={{ margin: "auto", textAlign: "end" }}>
-                  {product?._id === currentId ? (
-                    <Price sx={{ margin: "auto" }}>
-                      {" "}
-                      Harga:{" "}
-                      <NumberFormat
-                        value={
-                          !payment.discount || product.price >= payment.max
-                            ? product.price
-                            : handleFinalPrice()
-                        }
-                        displayType="text"
-                        thousandSeparator="."
-                        prefix="Rp."
-                        mask=""
-                        allowLeadingZeros={false}
-                        allowEmptyFormatting={false}
-                        fixedDecimalScale={false}
-                        isNumericString={false}
-                        allowNegative={true}
-                        decimalSeparator=","
-                      />
-                    </Price>
-                  ) : null}
+                  <Grid item xs={4} sx={{ margin: "auto", textAlign: "end" }}>
+                    {product?._id === currentId ? (
+                      <Price sx={{ margin: "auto" }}>
+                        {" "}
+                        Harga:{" "}
+                        <NumberFormat
+                          value={
+                            !payment.discount || product.price >= payment.max
+                              ? product.price
+                              : handleFinalPrice()
+                          }
+                          displayType="text"
+                          thousandSeparator="."
+                          prefix="Rp."
+                          mask=""
+                          allowLeadingZeros={false}
+                          allowEmptyFormatting={false}
+                          fixedDecimalScale={false}
+                          isNumericString={false}
+                          allowNegative={true}
+                          decimalSeparator=","
+                        />
+                      </Price>
+                    ) : null}
+                  </Grid>
                 </Grid>
-              </Grid>
-            </ListItemButton>
+              </ListItemButton>
+              {payment.name === "Ovo" ? (
+                <Collapse in={expanded} timeout="auto" unmountOnExit>
+                  <Content>
+                    <NumberFormat
+                      label="Masukkan nomor ponsel OVO"
+                      sx={{ width: "100%", margin: "8px auto" }}
+                      helperText="Pastikan nomor ponsel sama dengan nomor yang terdaftar pada OVO Wallet kamu ya 👌."
+                      format="+62###########"
+                      allowEmptyFormatting={true}
+                      customInput={InputField}
+                      onChange={handleOvoInput}
+                    />
+                  </Content>
+                </Collapse>
+              ) : null}
+            </Grid>
           ))}
         </PaymentsList>
       </ProductContainer>

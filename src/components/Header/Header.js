@@ -16,7 +16,7 @@ const MyAppBar = styled(AppBar)(({ theme }) => ({
   justifyContent: "space-between",
   alignItems: "center",
   height: "50px",
-  backgroundColor: "#2A2A2A",
+  backgroundColor: "#fff",
   boxShadow: `0 0.3px 6px 0 rgb(0 0 0 / 0.2)`,
   [theme.breakpoints.down("xs")]: {
     height: "40px",

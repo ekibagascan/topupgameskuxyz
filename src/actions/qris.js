@@ -7,8 +7,9 @@ export const QrisCharge = (chargeData, history) => async (dispatch) => {
 
     const { data } = await api.qrisCharge(chargeData);
 
-    history.push(`/order/status/${chargeData.external_id}`);
     dispatch({ type: QRIS_CHARGE, payload: data });
+
+    history.push(`/order/pay/${data.qris.external_id}`);
   } catch (error) {
     console.log(error);
   }

@@ -6,6 +6,7 @@ import {
   Grid,
   Autocomplete,
   Chip,
+  Skeleton,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import NumberFormat from "react-number-format";
@@ -70,6 +71,17 @@ const InputServer = styled(TextField)(({ theme }) => ({
     },
   },
 }));
+
+const InputSkeleton = styled(Skeleton)(({ theme }) => ({
+  width: 300,
+  height: 55,
+  margin: "0px 10px 10px 10px",
+  [theme.breakpoints.down("sm")]: {
+    margin: "0px 10 10px",
+    width: 180,
+    height: 45,
+  },
+}));
 const InputID = ({ category, productData, setProductData }) => {
   if (!category || category.form === "none") return null;
 
@@ -78,66 +90,85 @@ const InputID = ({ category, productData, setProductData }) => {
       <Title variant="h6">{category.title}</Title>
       <InputContainer container alignItems="stretch" spacing={{ xs: 1, md: 3 }}>
         <InputForm item xs={12}>
-          <InputField
-            name="id"
-            id="outlined-error-helper-text"
-            variant="outlined"
-            label={category.title}
-            sx={{ margin: "auto 5px" }}
-            value={productData.playerId}
-            onChange={(e) =>
-              setProductData({
-                ...productData,
-                playerId: e.target.value,
-              })
-            }
-          />
-          {category.form === "double" ? (
+          {!category ? (
+            <InputSkeleton animation="wave" variant="rectangle" />
+          ) : (
             <InputField
-              name="zoneid"
-              id="outlined-error-helper-text"
+              name="playerId"
+              id="playerId"
               variant="outlined"
-              label={category.subtitle}
-              width="70%"
+              label={category.title}
               sx={{ margin: "auto 5px" }}
-              value={productData.zoneId}
+              value={productData.playerId}
+              error={!productData.playerId && true}
+              helperText={!productData.playerId && "Wajib diisi cuy!"}
               onChange={(e) =>
                 setProductData({
                   ...productData,
-                  zoneId: e.target.value,
+                  playerId: e.target.value,
                 })
               }
-            >
-              {" "}
-              <NumberFormat
-                format="(#####)"
-                mask="_"
-                allowEmptyFormatting={true}
-                displayType="input"
-              />{" "}
-            </InputField>
+            />
+          )}
+          {category.form === "double" ? (
+            !category ? (
+              <InputSkeleton animation="wave" variant="reactangle" />
+            ) : (
+              <InputField
+                name="zoneId"
+                id="zoneId"
+                variant="outlined"
+                label={category.subtitle}
+                width="70%"
+                sx={{ margin: "auto 5px" }}
+                value={productData.zoneId}
+                error={!productData.zoneId && true}
+                helperText={!productData.zoneId && "Wajib diisi cuy!"}
+                onChange={(e) =>
+                  setProductData({
+                    ...productData,
+                    zoneId: e.target.value,
+                  })
+                }
+              >
+                {" "}
+                <NumberFormat
+                  format="(#####)"
+                  mask="_"
+                  allowEmptyFormatting={true}
+                  displayType="input"
+                />{" "}
+              </InputField>
+            )
           ) : null}
           {category.form === "doubleServer" ? (
-            <ServerList
-              id="server"
-              options={category.server}
-              getOptionLabel={(option) => option.toString()}
-              isOptionEqualToValue={(option, value) =>
-                option.category === value.category
-              }
-              onChange={(e, value) =>
-                setProductData({ ...productData, server: value })
-              }
-              value={productData.server}
-              renderInput={(params) => (
-                <InputServer
-                  {...params}
-                  name="category"
-                  label={category.subtitle}
-                  variant="outlined"
-                />
-              )}
-            />
+            !category ? (
+              <InputSkeleton animation="wave" variant="reactangle" />
+            ) : (
+              <ServerList
+                id="server"
+                options={category.server}
+                getOptionLabel={(option) => option.toString()}
+                isOptionEqualToValue={(option, value) =>
+                  option.category === value.category
+                }
+                onChange={(e, value) =>
+                  setProductData({ ...productData, server: value })
+                }
+                value={productData.server}
+                renderInput={(params) => (
+                  <InputServer
+                    {...params}
+                    id="server"
+                    name="server"
+                    label={category.subtitle}
+                    variant="outlined"
+                    error={!productData.server && true}
+                    helperText={!productData.server && "Wajib diisi cuy!"}
+                  />
+                )}
+              />
+            )
           ) : null}
         </InputForm>
         <HelperText

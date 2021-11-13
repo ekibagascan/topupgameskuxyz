@@ -1,22 +1,22 @@
-import { FETCH_ALL_SLIDES } from '../constants/actionTypes'
+import { FETCH_ALL_SLIDES } from "../constants/actionTypes";
 
 const initialState = {
-  isLoading: true,
+  isSlideLoading: true,
   slides: [],
-}
+};
 
 const slides = (state = initialState, action) => {
   switch (action.type) {
-    case 'START_LOADING':
-      return { ...state, isLoading: true }
-    case 'END_LOADING':
-      return { ...state, isLoading: false }
+    case "START_LOADING":
+      return { ...state, isSlideLoading: true };
+    case "END_LOADING":
+      return { ...state, isSlideLoading: false };
     case FETCH_ALL_SLIDES:
-      return { ...state, slides: action.payload.data }
+      return { ...state, slides: action.payload.data };
 
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default slides
+export default slides;

@@ -1,16 +1,16 @@
 import { FETCH_ALL_CATEGORIES, FETCH_CATEGORY } from "../constants/actionTypes";
 
 const initialState = {
-  isLoading: true,
+  isCategoryLoading: true,
   categories: [],
 };
 
 const categories = (state = initialState, action) => {
   switch (action.type) {
     case "START_LOADING":
-      return { ...state, isLoading: true };
+      return { ...state, isCategoryLoading: true };
     case "END_LOADING":
-      return { ...state, isLoading: false };
+      return { ...state, isCategoryLoading: false };
     case FETCH_ALL_CATEGORIES:
       return { ...state, categories: action.payload.data };
     case FETCH_CATEGORY:

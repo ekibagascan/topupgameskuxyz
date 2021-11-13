@@ -5,6 +5,8 @@ import {
   ListItemButton,
   Grid,
   IconButton,
+  Skeleton,
+  Card,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CheckIcon from "@mui/icons-material/Check";
@@ -65,8 +67,22 @@ const ProductPrice = styled(Typography)(({ theme }) => ({
     fontWeight: 300,
   },
 }));
+const ProductSkeleton = styled(Skeleton)(({ theme }) => ({
+  width: 230,
+  height: 60,
+  [theme.breakpoints.down("sm")]: {
+    width: 180,
+    height: 55,
+  },
+}));
 
-const Nominals = ({ products, category, productData, setProductData }) => {
+const Nominals = ({
+  products,
+  category,
+  productData,
+  setProductData,
+  handleOvoInput,
+}) => {
   const [currentId, setCurrentId] = useState(0);
   const dispatch = useDispatch();
   const { product } = useSelector((state) => state.products);
@@ -77,7 +93,12 @@ const Nominals = ({ products, category, productData, setProductData }) => {
 
   const handleListItemClick = (name, index) => {
     setCurrentId(index);
-    setProductData({ ...productData, productName: name, productId: index });
+    setProductData({
+      ...productData,
+      productName: name,
+      productId: index,
+      category: category.name,
+    });
   };
 
   return (
@@ -92,65 +113,71 @@ const Nominals = ({ products, category, productData, setProductData }) => {
           alignItems="stretch"
         >
           <Voucher container>
-            {products.map((product) => (
-              <ListItemButton
-                key={product._id}
-                disabled={product.stock === 0 ? true : false}
-                selected={currentId === product._id}
-                onClick={() => handleListItemClick(product.name, product._id)}
-                sx={{
-                  display: "inline",
-                  width: "30%",
-                  textAlign: "center",
-                  margin: 1,
-                  border: 1,
-                  borderColor: "secondary.main",
-                  borderRadius: 1,
-                }}
-              >
-                {currentId === product._id ? (
-                  <IconButton
-                    component="span"
-                    sx={{
-                      position: "absolute",
-                      left: 2,
-                      top: 2,
-                      borderRadius: "15px",
-                      backgroundColor: "#9147FF",
-                    }}
-                  >
-                    <CheckIcon
+            {products.map((product) =>
+              !product ? (
+                <Card sx={{ margin: 1, boxShadow: "none" }}>
+                  <ProductSkeleton animation="wave" variant="rectangle" />
+                </Card>
+              ) : (
+                <ListItemButton
+                  key={product._id}
+                  disabled={product.stock === 0 ? true : false}
+                  selected={currentId === product._id}
+                  onClick={() => handleListItemClick(product.name, product._id)}
+                  sx={{
+                    display: "inline",
+                    width: "30%",
+                    textAlign: "center",
+                    margin: 1,
+                    border: 1,
+                    borderColor: "secondary.main",
+                    borderRadius: 1,
+                  }}
+                >
+                  {currentId === product._id ? (
+                    <IconButton
+                      component="span"
                       sx={{
                         position: "absolute",
-                        height: 16,
-                        color: "#fff",
+                        left: 2,
+                        top: 2,
+                        borderRadius: "15px",
+                        backgroundColor: "#9147FF",
                       }}
+                    >
+                      <CheckIcon
+                        sx={{
+                          position: "absolute",
+                          height: 16,
+                          color: "#fff",
+                        }}
+                      />
+                    </IconButton>
+                  ) : null}
+                  <ProductName
+                    variant="body2"
+                    sx={{ textAlign: "center", padding: 1, paddingBottom: 0 }}
+                  >
+                    {product.name}
+                  </ProductName>
+                  <ProductPrice variant="subtitle" sx={{ textAlign: "center" }}>
+                    <NumberFormat
+                      value={product.price}
+                      displayType="text"
+                      thousandSeparator="."
+                      prefix="Rp."
+                      mask=""
+                      allowLeadingZeros={false}
+                      allowEmptyFormatting={false}
+                      fixedDecimalScale={false}
+                      isNumericString={false}
+                      allowNegative={true}
+                      decimalSeparator=","
                     />
-                  </IconButton>
-                ) : null}
-                <ProductName
-                  variant="body2"
-                  sx={{ textAlign: "center", padding: 1, paddingBottom: 0 }}
-                >
-                  {product.name}
-                </ProductName>
-                <ProductPrice variant="subtitle" sx={{ textAlign: "center" }}>
-                  <NumberFormat
-                    value={product.price}
-                    displayType="text"
-                    thousandSeparator="."
-                    prefix="Rp."
-                    mask=""
-                    allowLeadingZeros={false}
-                    allowEmptyFormatting={false}
-                    fixedDecimalScale={false}
-                    isNumericString={false}
-                    allowNegative={true}
-                    decimalSeparator=","
-                  />
-                </ProductPrice>
-              </ListItemButton>
-            ))}
+                  </ProductPrice>
+                </ListItemButton>
+              )
+            )}
           </Voucher>
         </ProductContainer>
       </MyPaper>
@@ -159,6 +186,7 @@ const Nominals = ({ products, category, productData, setProductData }) => {
         currentId={currentId}
         productData={productData}
         setProductData={setProductData}
+        handleOvoInput={handleOvoInput}
       />
     </Grid>
   );

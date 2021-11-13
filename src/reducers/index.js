@@ -6,6 +6,7 @@ import orders from "./orders";
 import slides from "./slides";
 import ewallets from "./e-wallets";
 import qris from "./qris";
+import callbacks from "./callbacks";
 
 export default combineReducers({
   products,
@@ -14,4 +15,5 @@ export default combineReducers({
   slides,
   ewallets,
   qris,
+  callbacks,
 });

@@ -1,16 +1,18 @@
 import * as api from "../api";
 import {
-  FETCH_ALL_SLIDES,
+  FETCH_CALLBACK,
   START_LOADING,
   END_LOADING,
 } from "../constants/actionTypes";
 
-export const getAllSlides = () => async (dispatch) => {
+export const getCallback = (id) => async (dispatch) => {
   try {
     dispatch({ type: START_LOADING });
-    const { data } = await api.fetchAllSlides();
 
-    dispatch({ type: FETCH_ALL_SLIDES, payload: data });
+    const { data } = await api.fetchCallback(id);
+
+    dispatch({ type: FETCH_CALLBACK, payload: { callback: data } });
+
     dispatch({ type: END_LOADING });
   } catch (error) {
     console.log(error);
