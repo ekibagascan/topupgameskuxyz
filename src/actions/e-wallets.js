@@ -6,7 +6,7 @@ export const EWalletsCharge = (chargeData, history) => async (dispatch) => {
     dispatch({ type: START_LOADING });
 
     const { data } = await api.ewalletsCharge(chargeData);
-
+    console.log(data);
     dispatch({ type: EWALLET_CHARGE, payload: data });
 
     history.push(`/order/pay/${data.ewallet.reference_id}`);

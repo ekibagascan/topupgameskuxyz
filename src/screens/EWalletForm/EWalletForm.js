@@ -9,9 +9,9 @@ import {
   Divider,
   Backdrop,
   Skeleton,
+  Button,
 } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { LoadingButton } from "@mui/lab";
 import { styled } from "@mui/material/styles";
 import { useParams, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -25,6 +25,15 @@ import tpg from "../../assets/images/tpg.svg";
 import payments from "../../components/payments";
 import DetailOrder from "../../components/DetailOrder/DetailOrder";
 import CaraBayar from "../../components/CaraBayar/CaraBayar";
+
+function useIsMounted() {
+  const isMounted = useRef(false);
+  useEffect(() => {
+    isMounted.current = true;
+    return () => (isMounted.current = false);
+  }, []);
+  return isMounted;
+}
 
 const TotalTitle = styled(Typography)(({ theme }) => ({
   fontSize: "0.8rem",
@@ -54,12 +63,12 @@ const EWalletForm = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { id } = useParams();
-  const timer = useRef();
   const { order, isOrderLoading } = useSelector((state) => state.orders);
   const { callback } = useSelector((state) => state.callbacks);
-  const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [enter, setEnter] = useState(false);
+  const [state, setState] = useState("loading (4 sec)...");
+  const isMounted = useIsMounted();
 
   const handleClickEnter = () => {
     setEnter(true);
@@ -73,15 +82,13 @@ const EWalletForm = () => {
     setExpanded(!expanded);
   };
 
-  const handleLoading = () => {
-    setLoading(true);
-    timer.current = window.setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  };
-
   useEffect(() => {
-    dispatch(getOrder(id));
+    dispatch(getOrder(id)).then((data) => {
+      if (isMounted.current) {
+        setState(data);
+      }
+      return { state };
+    });
     dispatch(getCallback(id));
     if (order?.paymentMethod === "Ovo") {
       if (callback?.data?.status === "SUCCEEDED") {
@@ -92,7 +99,7 @@ const EWalletForm = () => {
         history.push(`/order/status/${id}`);
       }
     } else return null;
-  }, [callback, dispatch, history, id, order?.paymentMethod]);
+  }, [callback, dispatch, history, isMounted, id, order?.paymentMethod, state]);
 
   if (!order) return <Typography>No Data</Typography>;
 
@@ -297,7 +304,7 @@ const EWalletForm = () => {
                     )
                   )}
                   {order?.paymentMethod !== "Qris" ? (
-                    <LoadingButton
+                    <Button
                       href={
                         isMobile
                           ? order?.ewallet?.actions.mobile_web_checkout_url
@@ -305,8 +312,6 @@ const EWalletForm = () => {
                       }
                       variant="contained"
                       fullWidth
-                      loading={loading}
-                      onClick={handleLoading}
                       sx={{
                         borderRadius: "15px",
                         backgroundColor: "#0F00FF",
@@ -314,17 +319,15 @@ const EWalletForm = () => {
                       }}
                     >
                       Lanjut
-                    </LoadingButton>
+                    </Button>
                   ) : order?.paymentMethod === "ShopeePay" ? (
-                    <LoadingButton
+                    <Button
                       href={
                         order?.ewallet?.actions.mobile_deeplink_checkout_url
                       }
                       variant="contained"
                       fullWidth
-                      loading={loading}
                       disabled={isDesktop && true}
-                      onClick={handleLoading}
                       sx={{
                         borderRadius: "15px",
                         backgroundColor: "#0F00FF",
@@ -332,7 +335,7 @@ const EWalletForm = () => {
                       }}
                     >
                       Lanjut
-                    </LoadingButton>
+                    </Button>
                   ) : null}
                 </Grid>
               </Grid>
