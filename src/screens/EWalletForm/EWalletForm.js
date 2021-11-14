@@ -319,9 +319,7 @@ const EWalletForm = () => {
                   ) : order?.paymentMethod === "ShopeePay" ? (
                     <LoadingButton
                       href={
-                        isMobile
-                          ? order?.ewallet?.actions.mobile_deeplink_checkout_url
-                          : null
+                        order?.ewallet?.actions.mobile_deeplink_checkout_url
                       }
                       variant="contained"
                       fullWidth
