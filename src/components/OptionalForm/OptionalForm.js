@@ -118,7 +118,7 @@ const OptionalForm = ({ productData, setProductData, loading }) => {
         disabled={!productData.productId && !productData.paymentMethod && true}
         type="submit"
       >
-        Beli Sekarang 🐱‍🏍
+        Beli Sekarang 😺
       </OrderButton>
     </MyPaper>
   );
