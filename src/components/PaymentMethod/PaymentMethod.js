@@ -158,6 +158,7 @@ const PaymentMethod = ({
               <ListItemButton
                 selected={selectedIndex === payment._id}
                 onClick={() => handleListItemClick(payment.name, payment._id)}
+                disabled={payment.name === "Ovo" && true}
                 sx={{
                   margin: 1,
                   border: 1,
