@@ -296,8 +296,7 @@ const EWalletForm = () => {
                       </Title>
                     )
                   )}
-                  {(order?.paymentMethod !== "Ovo") &
-                  (order?.paymentMethod !== "Qris") ? (
+                  {order?.paymentMethod !== "Qris" ? (
                     <LoadingButton
                       href={
                         isMobile
