@@ -68,8 +68,9 @@ const Media = styled(CardMedia)(({ theme }) => ({
 }));
 
 const AppName = styled(Typography)(({ theme }) => ({
-  color: "#fff",
+  color: "#000",
   marginTop: "5px",
+  fontWeight: 600,
   fontSize: "0.8rem",
   [theme.breakpoints.down("sm")]: {
     fontSize: "0.65rem",

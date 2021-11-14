@@ -3,7 +3,6 @@ import { AppBar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 
-import ProductHunt from "../ProductHunt/ProductHunt";
 import topupgameskubrand from "../../assets/images/tpg.svg";
 
 const Grow = styled("div")(() => ({
@@ -23,7 +22,7 @@ const MyAppBar = styled(AppBar)(({ theme }) => ({
   },
 }));
 const Brand = styled("img")(({ theme }) => ({
-  margin: "2px 20px 2px 20px",
+  margin: "2px 20px",
   height: 30,
   [theme.breakpoints.down("sm")]: {
     margin: "2px auto",
@@ -43,7 +42,6 @@ const Header = () => {
         <BrandContainer to={"/"}>
           <Brand src={topupgameskubrand} alt="topupgameku" align="center" />
         </BrandContainer>
-        <ProductHunt />
       </MyAppBar>
     </Grow>
   );

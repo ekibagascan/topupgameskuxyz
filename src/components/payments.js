@@ -5,21 +5,14 @@ import linkaja from "../assets/images/linkaja.svg";
 import qris from "../assets/images/qris.svg";
 
 const payments = [
-  // {
-  //   _id: "1",
-  //   name: "GoPay",
-  //   channelCode: "",
-  //   country: ["id"],
-  //   discount: 0,
-  //   max: 50000,
-  //   image: gopay,
-  // },
   {
     _id: "1",
     name: "Qris",
     channelCode: "ID_QRIS",
     country: ["id"],
     discount: 0,
+    tax: 0,
+    fee: 0.7,
     image: qris,
   },
   {
@@ -28,6 +21,8 @@ const payments = [
     channelCode: "ID_OVO",
     country: ["id"],
     discount: 0,
+    tax: 10,
+    fee: 3,
     image: ovo,
   },
   {
@@ -36,6 +31,8 @@ const payments = [
     channelCode: "ID_DANA",
     country: ["id"],
     discount: 0,
+    tax: 10,
+    fee: 1.5,
     image: dana,
   },
   {
@@ -44,6 +41,8 @@ const payments = [
     channelCode: "ID_SHOPEEPAY",
     country: ["id"],
     discount: 0,
+    tax: 0,
+    fee: 1.5,
     image: shopeepay,
   },
   {
@@ -52,6 +51,8 @@ const payments = [
     channelCode: "ID_LINKAJA",
     country: ["id"],
     discount: 0,
+    tax: 10,
+    fee: 1.5,
     image: linkaja,
   },
 ];

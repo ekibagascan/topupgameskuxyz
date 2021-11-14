@@ -36,10 +36,10 @@ const PaymentsList = styled(Grid)(() => ({
   paddingBottom: 5,
 }));
 const Price = styled(Typography)(({ theme }) => ({
-  fontWeight: 500,
+  fontWeight: 600,
   fontSize: "1rem",
   [theme.breakpoints.down("sm")]: {
-    fontSize: "0.65rem",
+    fontSize: "0.7rem",
   },
 }));
 const PayLogo = styled("img")(({ theme }) => ({
@@ -91,29 +91,56 @@ const PaymentMethod = ({
   const [selectedIndex, setSelectedIndex] = useState("");
   const [expanded, setExpanded] = useState(false);
 
-  const handleListItemClick = (name, index, discount, max) => {
+  const handleDiscount = () => {
+    return Math.abs((5 / 100) * 100);
+  };
+
+  const handleNonDiscount = () => {
+    return Math.abs((12 / 100) * 100);
+  };
+
+  const handleNonDiscountOVO = () => {
+    return Math.abs((13.5 / 100) * 100);
+  };
+
+  const handleFinalPriceNonDiscount = () => {
+    return (
+      product?.price +
+      (product.price * handleNonDiscount()) / 100
+    ).toFixed(0);
+  };
+
+  const handleFinalPriceNDOVO = () => {
+    return (
+      product?.price +
+      (product.price * handleNonDiscountOVO()) / 100
+    ).toFixed(0);
+  };
+
+  const handleFinalPriceDiscount = () => {
+    return (product?.price + (product?.price * handleDiscount()) / 100).toFixed(
+      0
+    );
+  };
+
+  const handleListItemClick = (name, index) => {
     setSelectedIndex(index);
     setProductData({
       ...productData,
       totalPrice:
-        !discount || product?.price >= max
-          ? product?.price
-          : handleFinalPrice(),
+        name === "Qris"
+          ? handleFinalPriceDiscount()
+          : name === "ShopeePay"
+          ? handleFinalPriceDiscount()
+          : name === "Ovo"
+          ? handleFinalPriceNDOVO()
+          : handleFinalPriceNonDiscount(),
       paymentMethod: name,
     });
+
     if (name === "Ovo") {
       setExpanded(!expanded);
     }
-  };
-
-  const handleDiscount = () => {
-    return Math.abs((5 / 100) * 100).toFixed(0);
-  };
-
-  const handleFinalPrice = () => {
-    return (product?.price - (product.price * handleDiscount()) / 100).toFixed(
-      0
-    );
   };
 
   return (
@@ -130,14 +157,7 @@ const PaymentMethod = ({
             <Grid key={payment._id}>
               <ListItemButton
                 selected={selectedIndex === payment._id}
-                onClick={() =>
-                  handleListItemClick(
-                    payment.name,
-                    payment._id,
-                    payment.discount,
-                    payment.max
-                  )
-                }
+                onClick={() => handleListItemClick(payment.name, payment._id)}
                 sx={{
                   margin: 1,
                   border: 1,
@@ -182,9 +202,13 @@ const PaymentMethod = ({
                         Harga:{" "}
                         <NumberFormat
                           value={
-                            !payment.discount || product.price >= payment.max
-                              ? product.price
-                              : handleFinalPrice()
+                            payment.name === "Qris"
+                              ? handleFinalPriceDiscount()
+                              : payment.name === "ShopeePay"
+                              ? handleFinalPriceDiscount()
+                              : payment.name === "Ovo"
+                              ? handleFinalPriceNDOVO()
+                              : handleFinalPriceNonDiscount()
                           }
                           displayType="text"
                           thousandSeparator="."

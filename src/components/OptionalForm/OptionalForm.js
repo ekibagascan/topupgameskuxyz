@@ -60,8 +60,8 @@ const OptionalForm = ({ productData, setProductData, loading }) => {
   const handleChargeData = () => {
     setProductData({
       ...productData,
-      reference_id: uuidv4(),
-      external_id: uuidv4(),
+      reference_id: productData.paymentMethod !== "Qris" && uuidv4(),
+      external_id: productData.paymentMethod === "Qris" && uuidv4(),
       amount: productData.totalPrice,
       channel_code:
         productData.paymentMethod === "ShopeePay"
@@ -88,8 +88,8 @@ const OptionalForm = ({ productData, setProductData, loading }) => {
             textAlign: "start",
           }}
         >
-          Optional!: Pengen dapat bukti pembayaran dari order kamu? Yuk isi
-          Nomor WhatsApp atau email Kamu di bawah ini:
+          Opsional!: Pengen dapat bukti pembayaran dari order kamu? Yuk isi
+          Nomor WhatsApp Kamu di bawah ini:
         </GuidanceText>
         <InputContainer
           container
@@ -101,7 +101,7 @@ const OptionalForm = ({ productData, setProductData, loading }) => {
             <InputEmail
               name="id"
               variant="outlined"
-              label="No. WhatsApp atau Email"
+              label="No. WhatsApp"
               sx={{ margin: "auto 5px" }}
               value={productData.emailorPhone}
               onChange={(e) =>
@@ -118,7 +118,7 @@ const OptionalForm = ({ productData, setProductData, loading }) => {
         disabled={!productData.productId && !productData.paymentMethod && true}
         type="submit"
       >
-        Beli Sekarang cuz!🐱‍🏍
+        Beli Sekarang 🐱‍🏍
       </OrderButton>
     </MyPaper>
   );

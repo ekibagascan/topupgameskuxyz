@@ -101,6 +101,10 @@ const Nominals = ({
     });
   };
 
+  const handleDiscount = () => {
+    return Math.abs((5 / 100) * 100);
+  };
+
   return (
     <Grid>
       <MyPaper elevation={1}>
@@ -162,7 +166,10 @@ const Nominals = ({
                   </ProductName>
                   <ProductPrice variant="subtitle" sx={{ textAlign: "center" }}>
                     <NumberFormat
-                      value={product.price}
+                      value={
+                        product?.price +
+                        (product?.price * handleDiscount()) / 100
+                      }
                       displayType="text"
                       thousandSeparator="."
                       prefix="Rp."

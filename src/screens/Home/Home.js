@@ -69,19 +69,7 @@ const Home = () => {
             categorySection="trending"
             isLoading={isCategoryLoading}
           />
-          {isCategoryLoading ? null : (
-            <Typography
-              variant="h6"
-              sx={{ marginBottom: "8px", marginTop: "20px" }}
-            >
-              Top Games
-            </Typography>
-          )}
-          <GameCategory
-            categories={categories}
-            categorySection="topgames"
-            isCategoryLoading={isCategoryLoading}
-          />
+
           {isCategoryLoading ? null : (
             <Typography
               variant="h6"

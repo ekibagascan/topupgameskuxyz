@@ -8,20 +8,23 @@ import {
   CircularProgress,
   Divider,
   Backdrop,
+  Skeleton,
 } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { LoadingButton } from "@mui/lab";
 import { styled } from "@mui/material/styles";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import NumberFormat from "react-number-format";
 import QRCode from "react-qr-code";
 import { isDesktop, isMobile } from "react-device-detect";
 
 import { getOrder } from "../../actions/orders";
+import { getCallback } from "../../actions/callbacks";
 import tpg from "../../assets/images/tpg.svg";
 import payments from "../../components/payments";
 import DetailOrder from "../../components/DetailOrder/DetailOrder";
+import CaraBayar from "../../components/CaraBayar/CaraBayar";
 
 const TotalTitle = styled(Typography)(({ theme }) => ({
   fontSize: "0.8rem",
@@ -49,11 +52,22 @@ const NominalOrderList = styled(Typography)(({ theme }) => ({
 
 const EWalletForm = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const { id } = useParams();
   const timer = useRef();
-  const { order, isLoading } = useSelector((state) => state.orders);
+  const { order, isOrderLoading } = useSelector((state) => state.orders);
+  const { callback } = useSelector((state) => state.callbacks);
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [enter, setEnter] = useState(false);
+
+  const handleClickEnter = () => {
+    setEnter(true);
+  };
+
+  const handleCloseEnter = () => {
+    setEnter(false);
+  };
 
   const handleDetailOrder = () => {
     setExpanded(!expanded);
@@ -68,11 +82,21 @@ const EWalletForm = () => {
 
   useEffect(() => {
     dispatch(getOrder(id));
-  }, [dispatch, id]);
+    dispatch(getCallback(id));
+    if (order?.paymentMethod === "Ovo") {
+      if (callback?.data?.status === "SUCCEEDED") {
+        history.push(`/order/status/${id}`);
+      }
+    } else if (order?.paymentMethod === "Qris") {
+      if (callback?.status === "COMPLETED") {
+        history.push(`/order/status/${id}`);
+      }
+    } else return null;
+  }, [callback, dispatch, history, id, order?.paymentMethod]);
 
-  if (!order) return null;
+  if (!order) return <Typography>No Data</Typography>;
 
-  return isLoading ? (
+  return isOrderLoading ? (
     <Grid>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -147,18 +171,29 @@ const EWalletForm = () => {
                       <Title textAlign="center" sx={{ marginBottom: "20px" }}>
                         Silahkan scan QRIS Code di bawah melalui aplikasi
                         E-Wallet atau aplikasi Bank apa saja yang kamu miliki
-                        dan mendukung pembayaran QRIS oke😎.
+                        dan mendukung pembayaran QRIS. 😎
                       </Title>
                       <QRCode value={order.qris.qr_string} />
+                      <Typography
+                        sx={{ color: "blue", mt: "20px", fontWeight: 600 }}
+                        variant="body2"
+                        onClick={handleClickEnter}
+                      >
+                        Lihat Cara Bayar
+                      </Typography>
+                      <CaraBayar
+                        enter={enter}
+                        handleCloseEnter={handleCloseEnter}
+                      />
                     </>
                   ) : order?.paymentMethod === "ShopeePay" ? (
-                    <Title textAlign="center" sx={{ marginBottom: "10px" }}>
+                    <Title textAlign="center" sx={{ marginBottom: "8px" }}>
                       Klik Lanjut untuk melanjutkan ke {order?.paymentMethod}{" "}
                       untuk melakukan pembayaran. **Checkout ShopeePay hanya
                       bisa dilakukan melalui Smartphone
                     </Title>
                   ) : (
-                    <Title textAlign="center" sx={{ marginBottom: "10px" }}>
+                    <Title textAlign="center" sx={{ marginBottom: "8px" }}>
                       Klik Lanjut untuk melanjutkan ke {order?.paymentMethod}{" "}
                       untuk melakukan pembayaran.
                     </Title>
@@ -225,6 +260,42 @@ const EWalletForm = () => {
                     </Grid>
                     <DetailOrder expanded={expanded} order={order} />
                   </Grid>
+                  {order?.paymentMethod === "Ovo" ? (
+                    <Grid sx={{ paddingLeft: 2, paddingRight: 2 }}>
+                      <Skeleton
+                        variant="circular"
+                        width={35}
+                        height={35}
+                        sx={{ bgcolor: "#E59934", margin: "20px auto" }}
+                      />
+                      <Title
+                        textAlign="center"
+                        sx={{ color: "#E59934", fontWeight: 600 }}
+                      >
+                        Menunggu Pembayaran
+                      </Title>
+                      <Title textAlign="center">
+                        Kamu akan dialihkan setelah kamu menyelesaikan
+                        pembayaran di Aplikasi{" "}
+                        <strong>{order?.paymentMethod}</strong>. <br></br>
+                        **Jika tidak dialihkan setelah bayar mohon untuk refresh
+                        halaman 🙏
+                      </Title>
+                    </Grid>
+                  ) : (
+                    order?.paymentMethod === "Qris" && (
+                      <Title
+                        textAlign="center"
+                        sx={{ margin: "20px auto 5px" }}
+                      >
+                        Kamu akan dialihkan setelah kamu menyelesaikan
+                        pembayaran menggunakan metode <strong>QRIS</strong>.{" "}
+                        <br></br>
+                        **Jika tidak dialihkan setelah bayar mohon untuk refresh
+                        halaman 🙏
+                      </Title>
+                    )
+                  )}
                   {(order?.paymentMethod !== "Ovo") &
                   (order?.paymentMethod !== "Qris") ? (
                     <LoadingButton
@@ -240,7 +311,7 @@ const EWalletForm = () => {
                       sx={{
                         borderRadius: "15px",
                         backgroundColor: "#0F00FF",
-                        margin: "15px auto 20px",
+                        margin: "30px auto 10px",
                       }}
                     >
                       Lanjut

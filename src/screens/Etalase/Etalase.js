@@ -94,7 +94,7 @@ const Etalase = () => {
     setLoading(true);
     timer.current = window.setTimeout(() => {
       setLoading(false);
-    }, 2500);
+    }, 4200);
     e.preventDefault();
     if (productData.channel_code !== null) {
       dispatch(EWalletsCharge({ ...productData }, history));
