@@ -320,7 +320,7 @@ const EWalletForm = () => {
                     <LoadingButton
                       href={
                         isMobile
-                          ? order?.ewallet?.actions.mobile_web_checkout_url
+                          ? order?.ewallet?.actions.mobile_deeplink_checkout_url
                           : null
                       }
                       variant="contained"
