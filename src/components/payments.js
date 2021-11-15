@@ -1,4 +1,4 @@
-import ovo from "../assets/images/ovo.svg";
+// import ovo from "../assets/images/ovo.svg";
 import dana from "../assets/images/dana.svg";
 import shopeepay from "../assets/images/shopeepay.svg";
 import linkaja from "../assets/images/linkaja.svg";
@@ -14,19 +14,20 @@ const payments = [
     tax: 0,
     fee: 0.7,
     image: qris,
+    minTx: 1500,
   },
+  // {
+  //   _id: "2",
+  //   name: "Ovo",
+  //   channelCode: "ID_OVO",
+  //   country: ["id"],
+  //   discount: 0,
+  //   tax: 10,
+  //   fee: 3,
+  //   image: ovo,
+  // },
   {
     _id: "2",
-    name: "Ovo",
-    channelCode: "ID_OVO",
-    country: ["id"],
-    discount: 0,
-    tax: 10,
-    fee: 3,
-    image: ovo,
-  },
-  {
-    _id: "3",
     name: "Dana",
     channelCode: "ID_DANA",
     country: ["id"],
@@ -36,7 +37,7 @@ const payments = [
     image: dana,
   },
   {
-    _id: "4",
+    _id: "3",
     name: "ShopeePay",
     channelCode: "ID_SHOPEEPAY",
     country: ["id"],
@@ -46,7 +47,7 @@ const payments = [
     image: shopeepay,
   },
   {
-    _id: "5",
+    _id: "4",
     name: "LinkAja",
     channelCode: "ID_LINKAJA",
     country: ["id"],

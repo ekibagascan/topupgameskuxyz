@@ -93,10 +93,14 @@ const EWalletForm = () => {
     if (order?.paymentMethod === "Ovo") {
       if (callback?.data?.status === "SUCCEEDED") {
         history.push(`/order/status/${id}`);
+      } else if (callback?.data?.status === "FAILED") {
+        history.push(`/order/status/failed/${id}`);
       }
     } else if (order?.paymentMethod === "Qris") {
       if (callback?.status === "COMPLETED") {
         history.push(`/order/status/${id}`);
+      } else if (callback?.data?.status === "FAILED") {
+        history.push(`/order/status/failed/${id}`);
       }
     } else return null;
   }, [callback, dispatch, history, isMounted, id, order?.paymentMethod, state]);
@@ -303,7 +307,7 @@ const EWalletForm = () => {
                       </Title>
                     )
                   )}
-                  {order?.paymentMethod !== "Qris" ? (
+                  {(order?.paymentMethod !== "Qris") & "ShopeePay" ? (
                     <Button
                       href={
                         isMobile
@@ -320,7 +324,8 @@ const EWalletForm = () => {
                     >
                       Lanjut
                     </Button>
-                  ) : order?.paymentMethod === "ShopeePay" ? (
+                  ) : null}
+                  {order?.paymentMethod === "ShopeePay" ? (
                     <Button
                       href={
                         order?.ewallet?.actions.mobile_deeplink_checkout_url

@@ -18,6 +18,7 @@ import NumberFormat from "react-number-format";
 import moment from "moment";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import CheckIcon from "@mui/icons-material/Check";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 import { getCallback } from "../../actions/callbacks";
 import { getOrder } from "../../actions/orders";
@@ -155,7 +156,22 @@ const PaymentScreen = () => {
                   <PaymentsIcon fontSize="large" sx={{ color: "#fff" }} />
                 </IconButton>
               </Grid>
-            ) : null}
+            ) : (
+              <Grid textAlign="center" sx={{ marginRight: "40px" }}>
+                <IconButton
+                  size="medium"
+                  sx={{
+                    backgroundColor: "#E02401",
+                    border: "4px solid #FFF",
+                    top: 60,
+                    position: "absolute",
+                  }}
+                >
+                  <CancelIcon fontSize="large" sx={{ color: "#fff" }} />
+                </IconButton>
+              </Grid>
+            )}
+
             {(callback?.status === "COMPLETED") & order?.isDelivered ? (
               <Grid textAlign="center" sx={{ marginRight: "40px" }}>
                 <IconButton
@@ -184,7 +200,21 @@ const PaymentScreen = () => {
                   <PaymentsIcon fontSize="large" sx={{ color: "#fff" }} />
                 </IconButton>
               </Grid>
-            ) : null}
+            ) : (
+              <Grid textAlign="center" sx={{ marginRight: "40px" }}>
+                <IconButton
+                  size="medium"
+                  sx={{
+                    backgroundColor: "#E02401",
+                    border: "4px solid #FFF",
+                    top: 60,
+                    position: "absolute",
+                  }}
+                >
+                  <CancelIcon fontSize="large" sx={{ color: "#fff" }} />
+                </IconButton>
+              </Grid>
+            )}
             <Paper
               elevation={2}
               sx={{
@@ -207,8 +237,9 @@ const PaymentScreen = () => {
                     ? "Order Berhasil 🥳"
                     : callback?.data?.status === "SUCCEEDED"
                     ? "Pembayaran Berhasil 😎"
-                    : !callback?.data?.status === "SUCCEEDED" &&
-                      "Lum Dibayar Ka 😊"}
+                    : callback?.data?.status === "PENDING"
+                    ? "Lum Dibayar Ka 😊"
+                    : "Ups Pembayaran Gagal 😶"}
                 </Typography>
                 <Typography
                   variant="h6"
@@ -370,12 +401,16 @@ const PaymentScreen = () => {
                       <br></br> Jika belum terkirim silahkan hubungi kontak di
                       bawah ini dengan menyertakan bukti pembayaran. 👌
                     </TextMessage>
+                  ) : callback?.data?.status === "Pending" ? (
+                    <TextMessage variant="body2">
+                      Belum Dibayar ka 😏.
+                    </TextMessage>
                   ) : (
-                    !callback?.data?.status === "SUCCEEDED" && (
-                      <TextMessage variant="body2">
-                        Belum Dibayar ka 😏.
-                      </TextMessage>
-                    )
+                    <TextMessage variant="body2">
+                      Pembayaran gagal, silahkan ulangi lagi dengan metode
+                      pembayaran yang lain atau hubungi kami lewat chat di bawah
+                      ini. 🙂
+                    </TextMessage>
                   )}
                   {(callback?.status === "COMPLETED") & order?.isDelivered ? (
                     <TextMessage variant="body2">
@@ -413,8 +448,22 @@ const PaymentScreen = () => {
                     >
                       Beli Lagi
                     </Button>
+                  ) : (callback?.status === "COMPLETED") &
+                    order?.isDelivered ? (
+                    <Button
+                      variant="contained"
+                      onClick={handleBack}
+                      sx={{
+                        borderRadius: "15px",
+                        backgroundColor: "#0F00FF",
+                        margin: "30px auto 10px",
+                        width: "90%",
+                      }}
+                    >
+                      Beli Lagi
+                    </Button>
                   ) : (
-                    callback?.status === "COMPLETED" && (
+                    callback?.data?.status === "FAILED" && (
                       <Button
                         variant="contained"
                         onClick={handleBack}
@@ -425,7 +474,7 @@ const PaymentScreen = () => {
                           width: "90%",
                         }}
                       >
-                        Beli Lagi
+                        Home
                       </Button>
                     )
                   )}

@@ -20,6 +20,11 @@ const App = () => {
             <Route path="/etalase/:name" exact component={Etalase} />
             <Route path="/order/pay/:id" exact component={EWalletForm} />
             <Route path="/order/status/:id" exact component={PaymentScreen} />
+            <Route
+              path="/order/status/failed/:id"
+              exact
+              component={PaymentScreen}
+            />
             <Footer />
           </>
         </Switch>
