@@ -1,12 +1,12 @@
 import React from "react";
-import { Dialog, DialogContent, Box, Grid } from "@mui/material";
+import { Dialog, DialogContent, Box, Grid, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import carabayar from "../../assets/images/carabayar1hape.jpg";
+import carabayar from "../../assets/images/carabayar.png";
 
 const ImageGuide = styled("img")(({ theme }) => ({
   width: "600px",
   [theme.breakpoints.down("sm")]: {
-    width: "440px",
+    width: "430px",
   },
 }));
 
@@ -28,6 +28,17 @@ const CaraBayar = ({ enter, handleCloseEnter }) => {
           </Grid>
         </Box>
       </DialogContent>
+      <Button
+        variant="contained"
+        onClick={handleCloseEnter}
+        sx={{
+          position: "sticky",
+          backgroundColor: "#0F00FF",
+          borderRadius: "none",
+        }}
+      >
+        <strong>Tutup</strong>
+      </Button>
     </Dialog>
   );
 };
