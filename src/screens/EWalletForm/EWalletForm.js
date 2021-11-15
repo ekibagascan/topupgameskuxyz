@@ -201,7 +201,7 @@ const EWalletForm = () => {
                     <Title textAlign="center" sx={{ marginBottom: "8px" }}>
                       Klik Lanjut untuk melanjutkan ke {order?.paymentMethod}{" "}
                       untuk melakukan pembayaran. **Checkout ShopeePay hanya
-                      bisa dilakukan melalui Smartphone
+                      bisa dilakukan melalui Smartphone.
                     </Title>
                   ) : (
                     <Title textAlign="center" sx={{ marginBottom: "8px" }}>
@@ -302,12 +302,35 @@ const EWalletForm = () => {
                         Kamu akan dialihkan setelah kamu menyelesaikan
                         pembayaran menggunakan metode <strong>QRIS</strong>.{" "}
                         <br></br>
+                        **Jangan close laman ini, setelah bayar harap kembali ke
+                        halaman ini agar kamu dialihkan ke laman bukti
+                        pembayaran.
+                        <br></br>
                         **Jika tidak dialihkan setelah bayar mohon untuk refresh
                         halaman 🙏
                       </Title>
                     )
                   )}
-                  {(order?.paymentMethod !== "Qris") & "ShopeePay" ? (
+                  {order?.paymentMethod === "Dana" ? (
+                    <Button
+                      href={
+                        isMobile
+                          ? order?.ewallet?.actions.mobile_web_checkout_url
+                          : order?.ewallet?.actions.dekstop_web_checkout_url
+                      }
+                      variant="contained"
+                      fullWidth
+                      sx={{
+                        borderRadius: "15px",
+                        backgroundColor: "#0F00FF",
+                        margin: "30px auto 10px",
+                      }}
+                    >
+                      Lanjut
+                    </Button>
+                  ) : null}
+
+                  {order?.paymentMethod === "LinkAja" ? (
                     <Button
                       href={
                         isMobile
