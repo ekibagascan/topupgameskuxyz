@@ -175,7 +175,8 @@ const EWalletForm = () => {
                     <Title textAlign="center" sx={{ marginBottom: "10px" }}>
                       Silahkan check aplikasi{" "}
                       <strong>{order?.paymentMethod}</strong> kamu dan segera
-                      selesaikan pembayaranmu agar order dapat diproses ya.🤗
+                      selesaikan pembayaranmu dalam waktu kurang dari{" "}
+                      <strong>30 detik</strong> agar order dapat diproses ya.🤗
                     </Title>
                   ) : order?.paymentMethod === "Qris" ? (
                     <>

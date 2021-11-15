@@ -8,8 +8,8 @@ const BannerSkeleton = styled(Skeleton)(({ theme }) => ({
   height: 288,
   margin: "auto",
   [theme.breakpoints.down("sm")]: {
-    height: 144,
-    width: 300,
+    height: 147,
+    width: 350,
   },
 }));
 
