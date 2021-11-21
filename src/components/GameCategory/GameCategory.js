@@ -5,7 +5,7 @@ import {
   Card,
   CardMedia,
   Typography,
-  Grow,
+  Fade,
   Skeleton,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -111,7 +111,7 @@ const GameCategory = ({ categorySection, categories, isCategoryLoading }) => {
     >
       {categories.map((c) =>
         c?.category === categorySection ? (
-          <Grow in key={c?._id}>
+          <Fade in key={c?._id}>
             <Grid item xs={4} sm={3} lg={2}>
               {isCategoryLoading ? (
                 <SActionArea>
@@ -134,7 +134,7 @@ const GameCategory = ({ categorySection, categories, isCategoryLoading }) => {
                 <AppName spacing={{ xs: 0.5, sm: 1, md: 3 }}>{c.name}</AppName>
               )}
             </Grid>
-          </Grow>
+          </Fade>
         ) : null
       )}
     </MyContainer>

@@ -1,6 +1,6 @@
 import React from "react";
 import Carousel from "react-material-ui-carousel";
-import { Grid, Link, ImageListItem, Grow, Skeleton } from "@mui/material";
+import { Grid, Link, ImageListItem, Fade, Skeleton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 const BannerSkeleton = styled(Skeleton)(({ theme }) => ({
@@ -31,7 +31,7 @@ const SlideShow = ({ slides, isSlideLoading }) => {
 
 function Slide({ slide, isSlideLoading }) {
   return (
-    <Grow in>
+    <Fade in>
       <Link href={slide.link} rel="noreferrer" color="inherit" underline="none">
         <ImageListItem>
           {isSlideLoading ? (
@@ -45,7 +45,7 @@ function Slide({ slide, isSlideLoading }) {
           )}
         </ImageListItem>
       </Link>
-    </Grow>
+    </Fade>
   );
 }
 

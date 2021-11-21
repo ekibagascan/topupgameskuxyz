@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Grow,
+  Fade,
   Grid,
   Container,
   Paper,
@@ -130,7 +130,7 @@ const PaymentScreen = () => {
     );
 
   return (
-    <Grow in>
+    <Fade in>
       <Container maxWidth="sm" sx={{ paddingLeft: 2, paddingRight: 2 }}>
         <Grid
           container
@@ -528,7 +528,7 @@ const PaymentScreen = () => {
           </Grid>
         </Grid>
       </Container>
-    </Grow>
+    </Fade>
   );
 };
 

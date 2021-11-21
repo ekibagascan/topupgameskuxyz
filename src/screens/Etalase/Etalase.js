@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useHistory } from "react-router-dom";
-import { Grow, Grid, Container } from "@mui/material";
+import { Fade, Grid, Container } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 import InputID from "../../components/InputID/InputID";
@@ -121,7 +121,7 @@ const Etalase = () => {
   if (!category) return null;
 
   return (
-    <Grow in>
+    <Fade in>
       <MainContainer maxWidth="md">
         <GridContainer
           container
@@ -153,7 +153,7 @@ const Etalase = () => {
           </GridEtalase>
         </GridContainer>
       </MainContainer>
-    </Grow>
+    </Fade>
   );
 };
 
