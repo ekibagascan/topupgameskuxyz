@@ -82,7 +82,7 @@ const Etalase = () => {
       }
       return { state };
     });
-  }, [dispatch, name, isMounted, state, productData]);
+  }, [dispatch, name, isMounted, state]);
 
   if (!products) return "Belum ada produk";
 
