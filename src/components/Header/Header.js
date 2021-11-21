@@ -23,7 +23,6 @@ const MyAppBar = styled(AppBar)(({ theme }) => ({
 }));
 const Brand = styled("img")(({ theme }) => ({
   margin: "2px 20px",
-  height: 30,
   [theme.breakpoints.down("sm")]: {
     margin: "2px auto",
     height: 25,
@@ -40,7 +39,12 @@ const Header = () => {
     <Grow>
       <MyAppBar id="app-bar" position="fixed">
         <BrandContainer to={"/"}>
-          <Brand src={topupgameskubrand} alt="topupgameku" align="center" />
+          <Brand
+            src={topupgameskubrand}
+            alt="topupgameku"
+            align="center"
+            height={30}
+          />
         </BrandContainer>
       </MyAppBar>
     </Grow>
