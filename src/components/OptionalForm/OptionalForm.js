@@ -88,8 +88,8 @@ const OptionalForm = ({ productData, setProductData, loading }) => {
             textAlign: "start",
           }}
         >
-          *Opsional! Pengen dapat bukti pembayaran order? Isi Nomor WhatsApp
-          kamu di bawah ini:
+          *Opsional! Untuk mendapatkan bukti pembayaran order, isi Nomor
+          WhatsApp kamu di bawah ini 👇:
         </GuidanceText>
         <InputContainer
           container

@@ -131,13 +131,12 @@ const InputID = ({ category, productData, setProductData }) => {
                   })
                 }
               >
-                {" "}
                 <NumberFormat
                   format="(#####)"
                   mask="_"
                   allowEmptyFormatting={true}
                   displayType="input"
-                />{" "}
+                />
               </InputField>
             )
           ) : null}

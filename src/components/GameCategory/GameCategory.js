@@ -87,18 +87,6 @@ const MySkeleton = styled(Skeleton)(({ theme }) => ({
   },
 }));
 
-const TitleSkeleton = styled(Skeleton)(({ theme }) => ({
-  width: 170,
-  height: 35,
-  marginBottom: "10px",
-  marginTop: "20px",
-  [theme.breakpoints.down("sm")]: {
-    marginTop: "5px",
-    width: 120,
-    height: 25,
-  },
-}));
-
 const SubtitleSkeleton = styled(Skeleton)(({ theme }) => ({
   margin: "10px auto 5px",
   width: 130,
@@ -112,55 +100,44 @@ const SubtitleSkeleton = styled(Skeleton)(({ theme }) => ({
 
 const GameCategory = ({ categorySection, categories, isCategoryLoading }) => {
   return (
-    <>
-      {isCategoryLoading ? (
-        <TitleSkeleton animation="wave" variant="text" />
-      ) : null}
-      <MyContainer
-        container
-        alignitems="center"
-        alignContent="center"
-        justifyItems="center"
-        spacing={{ xs: 1, sm: 2, md: 4 }}
-        rowSpacing={{ xs: 3, sm: 3, md: 4 }}
-        columnSpacing={{ xs: 2, sm: 3, md: 4 }}
-      >
-        {categories.map((c) =>
-          c?.category === categorySection ? (
-            <Grow in key={c?._id}>
-              <Grid item xs={4} sm={3} lg={2}>
-                {isCategoryLoading ? (
-                  <SActionArea>
-                    <SCard>
-                      <MySkeleton animation="wave" variant="rectangular" />
-                    </SCard>
-                  </SActionArea>
-                ) : (
-                  <ActionArea>
-                    <MyCard>
-                      <Link to={`/etalase/${c?.name}`}>
-                        <Media
-                          component="img"
-                          image={c?.image}
-                          title={c?.name}
-                        />
-                      </Link>
-                    </MyCard>
-                  </ActionArea>
-                )}
-                {isCategoryLoading ? (
-                  <SubtitleSkeleton animation="wave" variant="text" />
-                ) : (
-                  <AppName spacing={{ xs: 0.5, sm: 1, md: 3 }}>
-                    {c.name}
-                  </AppName>
-                )}
-              </Grid>
-            </Grow>
-          ) : null
-        )}
-      </MyContainer>
-    </>
+    <MyContainer
+      container
+      alignitems="center"
+      alignContent="center"
+      justifyItems="center"
+      spacing={{ xs: 1, sm: 2, md: 4 }}
+      rowSpacing={{ xs: 3, sm: 3, md: 4 }}
+      columnSpacing={{ xs: 2, sm: 3, md: 4 }}
+    >
+      {categories.map((c) =>
+        c?.category === categorySection ? (
+          <Grow in key={c?._id}>
+            <Grid item xs={4} sm={3} lg={2}>
+              {isCategoryLoading ? (
+                <SActionArea>
+                  <SCard>
+                    <MySkeleton animation="wave" variant="rectangular" />
+                  </SCard>
+                </SActionArea>
+              ) : (
+                <ActionArea>
+                  <MyCard>
+                    <Link to={`/etalase/${c?.name}`}>
+                      <Media component="img" image={c?.image} title={c?.name} />
+                    </Link>
+                  </MyCard>
+                </ActionArea>
+              )}
+              {isCategoryLoading ? (
+                <SubtitleSkeleton animation="wave" variant="text" />
+              ) : (
+                <AppName spacing={{ xs: 0.5, sm: 1, md: 3 }}>{c.name}</AppName>
+              )}
+            </Grid>
+          </Grow>
+        ) : null
+      )}
+    </MyContainer>
   );
 };
 

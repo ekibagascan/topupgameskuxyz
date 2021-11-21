@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Grow,
   Grid,
@@ -21,7 +21,6 @@ import CheckIcon from "@mui/icons-material/Check";
 import CancelIcon from "@mui/icons-material/Cancel";
 
 import { getCallback } from "../../actions/callbacks";
-import { getOrder } from "../../actions/orders";
 import CallUs from "../../components/CallUs/CallUs";
 
 const TitleDetails = styled(Typography)(({ theme }) => ({
@@ -76,30 +75,43 @@ const TextMessage = styled(Typography)(({ theme }) => ({
   },
 }));
 
+function useIsMounted() {
+  const isMounted = useRef(false);
+  useEffect(() => {
+    isMounted.current = true;
+    return () => (isMounted.current = false);
+  }, []);
+  return isMounted;
+}
+
 const PaymentScreen = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { callback, isCallbackLoading } = useSelector(
     (state) => state.callbacks
   );
-  const { order } = useSelector((state) => state.orders);
   const { id } = useParams();
+  const [state, setState] = useState("loading (4 sec)...");
+  const isMounted = useIsMounted();
+  const txData = callback?.metadata;
 
   const handleBack = () => {
     history.push("/");
   };
 
   useEffect(() => {
-    dispatch(getOrder(id));
-    dispatch(getCallback(id));
-  }, [dispatch, id]);
+    dispatch(getCallback(id)).then((data) => {
+      if (isMounted.current) {
+        setState(data);
+      }
+      return { state };
+    });
+  }, [dispatch, id, isMounted, state]);
 
   if (!callback) return <Typography>No Data Available</Typography>;
 
-  if (!order) return <Typography>No Data Available</Typography>;
-
   window.onload = function () {
-    if (!window.location.hash & order.isDelivered) {
+    if (!window.location.hash & txData.isDelivered) {
       window.location = window.location + "#loaded";
       window.location.reload();
     }
@@ -128,7 +140,7 @@ const PaymentScreen = () => {
           spacing={0}
         >
           <Grid item xs={12}>
-            {(callback?.data?.status === "SUCCEEDED") & order?.isDelivered ? (
+            {(txData?.status === "SUCCEEDED") & txData?.isDelivered ? (
               <Grid textAlign="center" sx={{ marginRight: "40px" }}>
                 <IconButton
                   size="medium"
@@ -142,7 +154,7 @@ const PaymentScreen = () => {
                   <CheckIcon fontSize="large" sx={{ color: "#fff" }} />
                 </IconButton>
               </Grid>
-            ) : callback?.data?.status === "SUCCEEDED" ? (
+            ) : txData?.status === "SUCCEEDED" ? (
               <Grid textAlign="center" sx={{ marginRight: "40px" }}>
                 <IconButton
                   size="medium"
@@ -156,7 +168,7 @@ const PaymentScreen = () => {
                   <PaymentsIcon fontSize="large" sx={{ color: "#fff" }} />
                 </IconButton>
               </Grid>
-            ) : (
+            ) : txData?.status === "FAILED" ? (
               <Grid textAlign="center" sx={{ marginRight: "40px" }}>
                 <IconButton
                   size="medium"
@@ -170,9 +182,9 @@ const PaymentScreen = () => {
                   <CancelIcon fontSize="large" sx={{ color: "#fff" }} />
                 </IconButton>
               </Grid>
-            )}
+            ) : null}
 
-            {(callback?.status === "COMPLETED") & order?.isDelivered ? (
+            {(txData?.status === "COMPLETED") & txData?.isDelivered ? (
               <Grid textAlign="center" sx={{ marginRight: "40px" }}>
                 <IconButton
                   size="medium"
@@ -186,7 +198,7 @@ const PaymentScreen = () => {
                   <CheckIcon fontSize="large" sx={{ color: "#fff" }} />
                 </IconButton>
               </Grid>
-            ) : callback?.status === "COMPLETED" ? (
+            ) : txData?.status === "COMPLETED" ? (
               <Grid textAlign="center" sx={{ marginRight: "40px" }}>
                 <IconButton
                   size="medium"
@@ -200,7 +212,7 @@ const PaymentScreen = () => {
                   <PaymentsIcon fontSize="large" sx={{ color: "#fff" }} />
                 </IconButton>
               </Grid>
-            ) : (
+            ) : txData?.status === "FAILED" ? (
               <Grid textAlign="center" sx={{ marginRight: "40px" }}>
                 <IconButton
                   size="medium"
@@ -214,7 +226,7 @@ const PaymentScreen = () => {
                   <CancelIcon fontSize="large" sx={{ color: "#fff" }} />
                 </IconButton>
               </Grid>
-            )}
+            ) : null}
             <Paper
               elevation={2}
               sx={{
@@ -233,13 +245,15 @@ const PaymentScreen = () => {
                     fontFamily: "sans-serif",
                   }}
                 >
-                  {(callback?.data?.status === "SUCCEEDED") & order?.isDelivered
+                  {(txData?.status === "SUCCEEDED") & txData?.isDelivered
                     ? "Order Berhasil 🥳"
-                    : callback?.data?.status === "SUCCEEDED"
+                    : txData?.status === "SUCCEEDED"
                     ? "Pembayaran Berhasil 😎"
-                    : callback?.data?.status === "PENDING"
+                    : txData?.status === "PENDING"
                     ? "Lum Dibayar Ka 😊"
-                    : "Ups Pembayaran Gagal 😶"}
+                    : txData?.status === "FAILED"
+                    ? "Ups Pembayaran Gagal 😶"
+                    : null}
                 </Typography>
                 <Typography
                   variant="h6"
@@ -250,11 +264,15 @@ const PaymentScreen = () => {
                     fontFamily: "sans-serif",
                   }}
                 >
-                  {(callback?.status === "COMPLETED") & order?.isDelivered
+                  {(txData?.status === "COMPLETED") & txData?.isDelivered
                     ? "Order Berhasil 🥳"
-                    : callback?.status === "COMPLETED"
+                    : txData?.status === "COMPLETED"
                     ? "Pembayaran Berhasil 😎"
-                    : !callback?.status === "COMPLETED" && "Lum Dibayar Ka 😊"}
+                    : !txData?.status === "COMPLETED"
+                    ? "Lum Dibayar Ka 😊"
+                    : txData?.status === "FAILED"
+                    ? "Ups Pembayaran Gagal 😶"
+                    : null}
                 </Typography>
                 <Divider
                   sx={{ border: "1px dashed #bbb", margin: "20px auto" }}
@@ -268,13 +286,11 @@ const PaymentScreen = () => {
                   >
                     <TitleDetails>Tanggal</TitleDetails>
                     <DetailsOrder>
-                      {moment(callback?.created).format(
-                        "MMM Do YYYY, h:mm:ss a"
-                      )}
+                      {moment(txData?.created).format("MMM Do YYYY, h:mm:ss a")}
                     </DetailsOrder>
                   </Grid>
 
-                  {order?.playerId ? (
+                  {txData?.playerId ? (
                     <Grid
                       item
                       xs={12}
@@ -282,10 +298,10 @@ const PaymentScreen = () => {
                       sx={{ display: "flex" }}
                     >
                       <TitleDetails>ID player</TitleDetails>
-                      <DetailsOrder>{order?.playerId}</DetailsOrder>
+                      <DetailsOrder>{txData?.playerId}</DetailsOrder>
                     </Grid>
                   ) : null}
-                  {order?.zoneId ? (
+                  {txData?.zoneId ? (
                     <Grid
                       item
                       xs={12}
@@ -293,10 +309,10 @@ const PaymentScreen = () => {
                       sx={{ display: "flex" }}
                     >
                       <TitleDetails>Zone ID</TitleDetails>
-                      <DetailsOrder>{order?.zoneId}</DetailsOrder>
+                      <DetailsOrder>{txData?.zoneId}</DetailsOrder>
                     </Grid>
                   ) : null}
-                  {order?.server ? (
+                  {txData?.server ? (
                     <Grid
                       item
                       xs={12}
@@ -304,7 +320,7 @@ const PaymentScreen = () => {
                       sx={{ display: "flex" }}
                     >
                       <TitleDetails>Server/Platform</TitleDetails>
-                      <DetailsOrder>{order?.server}</DetailsOrder>
+                      <DetailsOrder>{txData?.server}</DetailsOrder>
                     </Grid>
                   ) : null}
                   <Grid
@@ -314,7 +330,7 @@ const PaymentScreen = () => {
                     sx={{ display: "flex" }}
                   >
                     <TitleDetails>Nama item</TitleDetails>
-                    <DetailsOrder>{order?.productName}</DetailsOrder>
+                    <DetailsOrder>{txData?.productName}</DetailsOrder>
                   </Grid>
                   <Grid
                     item
@@ -326,7 +342,7 @@ const PaymentScreen = () => {
                     <DetailsOrder>
                       {" "}
                       <NumberFormat
-                        value={order?.totalPrice}
+                        value={txData?.totalPrice}
                         displayType="text"
                         thousandSeparator="."
                         prefix="Rp."
@@ -347,7 +363,7 @@ const PaymentScreen = () => {
                     sx={{ display: "flex" }}
                   >
                     <TitleDetails>Bayar pake</TitleDetails>
-                    <DetailsOrder>{order?.paymentMethod}</DetailsOrder>
+                    <DetailsOrder>{txData?.paymentMethod}</DetailsOrder>
                   </Grid>
                 </Grid>
                 <Divider
@@ -367,7 +383,7 @@ const PaymentScreen = () => {
                   <TotalTitle>Total</TotalTitle>
                   <NominalOrderList>
                     <NumberFormat
-                      value={order?.totalPrice}
+                      value={txData?.totalPrice}
                       displayType="text"
                       thousandSeparator="."
                       prefix="Rp."
@@ -385,39 +401,37 @@ const PaymentScreen = () => {
                   sx={{ border: "1px dashed #bbb", margin: "20px auto" }}
                 />
                 <Grid textAlign="center">
-                  {(callback?.data?.status === "SUCCEEDED") &
-                  order?.isDelivered ? (
+                  {(txData?.status === "SUCCEEDED") & txData?.isDelivered ? (
                     <TextMessage variant="body2">
                       Order kamu telah terkirim kini kamu siap up to the next
                       level 😊.
                     </TextMessage>
-                  ) : callback?.data?.status === "SUCCEEDED" ? (
+                  ) : txData?.status === "SUCCEEDED" ? (
                     <TextMessage>
                       <strong>
                         Terima kasih, pembayaran sudah kami terima{" "}
                       </strong>
-                      😉. <br></br> Dalam 1-5 menit order otomatis akan terkirim
-                      ke akun kamu.
+                      . <br></br> Dalam 1-10 menit order otomatis akan terkirim
+                      ke akun {txData?.category}-mu. 😉
                       <br></br> Jika belum terkirim silahkan hubungi kontak di
-                      bawah ini dengan menyertakan bukti pembayaran. 👌
+                      bawah dengan menyertakan bukti pembayaran. 👌
                     </TextMessage>
-                  ) : callback?.data?.status === "Pending" ? (
+                  ) : txData?.status === "PENDING" ? (
                     <TextMessage variant="body2">
                       Belum Dibayar ka 😏.
                     </TextMessage>
-                  ) : (
+                  ) : txData?.status === "FAILED" ? (
                     <TextMessage variant="body2">
-                      Pembayaran gagal, silahkan ulangi lagi dengan metode
-                      pembayaran yang lain atau hubungi kami lewat chat di bawah
-                      ini. 🙂
+                      Pembayaran gagal, silahkan ulangi lagi ordernya. 🙂
                     </TextMessage>
-                  )}
-                  {(callback?.status === "COMPLETED") & order?.isDelivered ? (
+                  ) : null}
+
+                  {(txData?.status === "COMPLETED") & txData?.isDelivered ? (
                     <TextMessage variant="body2">
                       Order kamu telah terkirim kini kamu siap up to the next
                       level 😊.
                     </TextMessage>
-                  ) : callback?.status === "COMPLETED" ? (
+                  ) : txData?.status === "COMPLETED" ? (
                     <TextMessage>
                       <strong>
                         Terima kasih, pembayaran sudah kami terima{" "}
@@ -427,15 +441,17 @@ const PaymentScreen = () => {
                       <br></br> Jika belum terkirim silahkan hubungi kontak di
                       bawah ini dengan menyertakan bukti pembayaran. 👌
                     </TextMessage>
-                  ) : (
-                    !callback?.status === "COMPLETED" && (
-                      <TextMessage variant="body2">
-                        Belum Dibayar ka 😏.
-                      </TextMessage>
-                    )
-                  )}
-                  {(callback?.data?.status === "SUCCEEDED") &
-                  order?.isDelivered ? (
+                  ) : !txData?.status === "COMPLETED" ? (
+                    <TextMessage variant="body2">
+                      Belum Dibayar ka 😏.
+                    </TextMessage>
+                  ) : txData?.status === "FAILED" ? (
+                    <TextMessage variant="body2">
+                      Pembayaran gagal, silahkan ulangi lagi ordernya. 🙂
+                    </TextMessage>
+                  ) : null}
+
+                  {(txData?.status === "SUCCEEDED") & txData?.isDelivered ? (
                     <Button
                       variant="contained"
                       onClick={handleBack}
@@ -448,8 +464,22 @@ const PaymentScreen = () => {
                     >
                       Beli Lagi
                     </Button>
-                  ) : (callback?.status === "COMPLETED") &
-                    order?.isDelivered ? (
+                  ) : txData?.status === "SUCCEEDED" ? (
+                    <Button
+                      variant="contained"
+                      onClick={handleBack}
+                      sx={{
+                        borderRadius: "15px",
+                        backgroundColor: "#0F00FF",
+                        margin: "30px auto 10px",
+                        width: "90%",
+                      }}
+                    >
+                      Home
+                    </Button>
+                  ) : null}
+
+                  {(txData?.status === "COMPLETED") & txData?.isDelivered ? (
                     <Button
                       variant="contained"
                       onClick={handleBack}
@@ -462,21 +492,34 @@ const PaymentScreen = () => {
                     >
                       Beli Lagi
                     </Button>
-                  ) : (
-                    callback?.data?.status === "FAILED" && (
-                      <Button
-                        variant="contained"
-                        onClick={handleBack}
-                        sx={{
-                          borderRadius: "15px",
-                          backgroundColor: "#0F00FF",
-                          margin: "30px auto 10px",
-                          width: "90%",
-                        }}
-                      >
-                        Home
-                      </Button>
-                    )
+                  ) : txData?.status === "COMPLETED" ? (
+                    <Button
+                      variant="contained"
+                      onClick={handleBack}
+                      sx={{
+                        borderRadius: "15px",
+                        backgroundColor: "#0F00FF",
+                        margin: "30px auto 10px",
+                        width: "90%",
+                      }}
+                    >
+                      Home
+                    </Button>
+                  ) : null}
+
+                  {txData?.status === "FAILED" && (
+                    <Button
+                      variant="contained"
+                      onClick={handleBack}
+                      sx={{
+                        borderRadius: "15px",
+                        backgroundColor: "#0F00FF",
+                        margin: "30px auto 10px",
+                        width: "90%",
+                      }}
+                    >
+                      Home
+                    </Button>
                   )}
                   <CallUs />
                 </Grid>

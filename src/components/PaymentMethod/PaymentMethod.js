@@ -8,6 +8,7 @@ import {
   Collapse,
   TextField,
   CardContent,
+  CircularProgress,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CheckIcon from "@mui/icons-material/Check";
@@ -83,6 +84,7 @@ const Content = styled(CardContent)(() => ({
 
 const PaymentMethod = ({
   product,
+  isProductLoading,
   currentId,
   productData,
   setProductData,
@@ -106,14 +108,14 @@ const PaymentMethod = ({
   const handleFinalPriceNonDiscount = () => {
     return (
       product?.price +
-      (product.price * handleNonDiscount()) / 100
+      (product?.price * handleNonDiscount()) / 100
     ).toFixed(0);
   };
 
   const handleFinalPriceNDOVO = () => {
     return (
       product?.price +
-      (product.price * handleNonDiscountOVO()) / 100
+      (product?.price * handleNonDiscountOVO()) / 100
     ).toFixed(0);
   };
 
@@ -140,6 +142,8 @@ const PaymentMethod = ({
 
     if (name === "Ovo") {
       setExpanded(!expanded);
+    } else {
+      setExpanded(false);
     }
   };
 
@@ -159,7 +163,10 @@ const PaymentMethod = ({
                 selected={selectedIndex === payment._id}
                 onClick={() => handleListItemClick(payment.name, payment._id)}
                 disabled={
-                  handleFinalPriceDiscount() < payment.minTx ? true : false
+                  handleFinalPriceDiscount() < payment.minTx ||
+                  !productData.productId
+                    ? true
+                    : false
                 }
                 sx={{
                   margin: 1,
@@ -200,31 +207,41 @@ const PaymentMethod = ({
 
                   <Grid item xs={4} sx={{ margin: "auto", textAlign: "end" }}>
                     {product?._id === currentId ? (
-                      <Price sx={{ margin: "auto" }}>
-                        {" "}
-                        Harga:{" "}
-                        <NumberFormat
-                          value={
-                            payment.name === "Qris"
-                              ? handleFinalPriceDiscount()
-                              : payment.name === "ShopeePay"
-                              ? handleFinalPriceDiscount()
-                              : payment.name === "Ovo"
-                              ? handleFinalPriceNDOVO()
-                              : handleFinalPriceNonDiscount()
-                          }
-                          displayType="text"
-                          thousandSeparator="."
-                          prefix="Rp."
-                          mask=""
-                          allowLeadingZeros={false}
-                          allowEmptyFormatting={false}
-                          fixedDecimalScale={false}
-                          isNumericString={false}
-                          allowNegative={true}
-                          decimalSeparator=","
-                        />
-                      </Price>
+                      <>
+                        <Price sx={{ margin: "auto" }}>
+                          {" "}
+                          Harga:{" "}
+                          <NumberFormat
+                            value={
+                              payment.name === "Qris"
+                                ? handleFinalPriceDiscount()
+                                : payment.name === "ShopeePay"
+                                ? handleFinalPriceDiscount()
+                                : payment.name === "Ovo"
+                                ? handleFinalPriceNDOVO()
+                                : handleFinalPriceNonDiscount()
+                            }
+                            displayType="text"
+                            thousandSeparator="."
+                            prefix="Rp."
+                            mask=""
+                            allowLeadingZeros={false}
+                            allowEmptyFormatting={false}
+                            fixedDecimalScale={false}
+                            isNumericString={false}
+                            allowNegative={true}
+                            decimalSeparator=","
+                          />
+                        </Price>
+                        <Typography sx={{ fontSize: "0.5rem" }}>
+                          Harga sudah termasuk pajak 10%
+                        </Typography>
+                      </>
+                    ) : isProductLoading ? (
+                      <CircularProgress
+                        size={20}
+                        sx={{ marginRight: 2, color: "#4E31DA" }}
+                      />
                     ) : null}
                   </Grid>
                 </Grid>

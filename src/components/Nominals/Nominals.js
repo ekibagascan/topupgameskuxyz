@@ -85,7 +85,7 @@ const Nominals = ({
 }) => {
   const [currentId, setCurrentId] = useState(0);
   const dispatch = useDispatch();
-  const { product } = useSelector((state) => state.products);
+  const { product, isProductLoading } = useSelector((state) => state.products);
 
   useEffect(() => {
     if (currentId) dispatch(getProduct(currentId));
@@ -190,6 +190,7 @@ const Nominals = ({
       </MyPaper>
       <PaymentMethod
         product={product}
+        isProductLoading={isProductLoading}
         currentId={currentId}
         productData={productData}
         setProductData={setProductData}

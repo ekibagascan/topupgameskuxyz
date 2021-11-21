@@ -8,9 +8,9 @@ import {
   CircularProgress,
   Divider,
   Backdrop,
-  Skeleton,
   Button,
 } from "@mui/material";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { styled } from "@mui/material/styles";
 import { useParams, useHistory } from "react-router-dom";
@@ -20,7 +20,6 @@ import QRCode from "react-qr-code";
 import { isDesktop, isMobile } from "react-device-detect";
 
 import { getOrder } from "../../actions/orders";
-import { getCallback } from "../../actions/callbacks";
 import tpg from "../../assets/images/tpg.svg";
 import payments from "../../components/payments";
 import DetailOrder from "../../components/DetailOrder/DetailOrder";
@@ -64,11 +63,11 @@ const EWalletForm = () => {
   const history = useHistory();
   const { id } = useParams();
   const { order, isOrderLoading } = useSelector((state) => state.orders);
-  const { callback } = useSelector((state) => state.callbacks);
   const [expanded, setExpanded] = useState(false);
   const [enter, setEnter] = useState(false);
-  const [state, setState] = useState("loading (4 sec)...");
+  const [state, setState] = useState("loading (10 sec)...");
   const isMounted = useIsMounted();
+  const orderData = order?.metadata;
 
   const handleClickEnter = () => {
     setEnter(true);
@@ -89,21 +88,7 @@ const EWalletForm = () => {
       }
       return { state };
     });
-    dispatch(getCallback(id));
-    if (order?.paymentMethod === "Ovo") {
-      if (callback?.data?.status === "SUCCEEDED") {
-        history.push(`/order/status/${id}`);
-      } else if (callback?.data?.status === "FAILED") {
-        history.push(`/order/status/failed/${id}`);
-      }
-    } else if (order?.paymentMethod === "Qris") {
-      if (callback?.status === "COMPLETED") {
-        history.push(`/order/status/${id}`);
-      } else if (callback?.data?.status === "FAILED") {
-        history.push(`/order/status/failed/${id}`);
-      }
-    } else return null;
-  }, [callback, dispatch, history, isMounted, id, order?.paymentMethod, state]);
+  }, [dispatch, isMounted, id, state]);
 
   if (!order) return <Typography>No Data</Typography>;
 
@@ -127,7 +112,14 @@ const EWalletForm = () => {
           spacing={0}
         >
           <Grid item xs={12}>
-            <Paper elevation={2} sx={{ marginTop: "70px", padding: 2 }}>
+            <Paper
+              elevation={2}
+              sx={{
+                marginTop: "70px",
+                padding: 2,
+                boxShadow: `rgba(0, 0, 0, 0.25) 0px 2px 8px`,
+              }}
+            >
               <Grid>
                 <img
                   alt="topupgamesku"
@@ -149,7 +141,7 @@ const EWalletForm = () => {
                 >
                   <Title sx={{ fontWeight: 600 }}>Bayar Pake:</Title>
                   {payments.map((payment) =>
-                    payment.name === order?.paymentMethod ? (
+                    payment.name === orderData.paymentMethod ? (
                       <img
                         key={payment._id}
                         alt="payment-method"
@@ -171,21 +163,21 @@ const EWalletForm = () => {
                     marginBottom: "5px",
                   }}
                 >
-                  {order?.paymentMethod === "Ovo" ? (
+                  {orderData.paymentMethod === "Ovo" ? (
                     <Title textAlign="center" sx={{ marginBottom: "10px" }}>
                       Silahkan check aplikasi{" "}
-                      <strong>{order?.paymentMethod}</strong> kamu dan segera
+                      <strong>{orderData.paymentMethod}</strong> kamu dan segera
                       selesaikan pembayaranmu dalam waktu kurang dari{" "}
-                      <strong>30 detik</strong> agar order dapat diproses ya.🤗
+                      <strong>45 detik</strong> agar order dapat diproses ya.🤗
                     </Title>
-                  ) : order?.paymentMethod === "Qris" ? (
+                  ) : orderData.paymentMethod === "Qris" ? (
                     <>
                       <Title textAlign="center" sx={{ marginBottom: "20px" }}>
                         Silahkan scan QRIS Code di bawah melalui aplikasi
                         E-Wallet atau aplikasi Bank apa saja yang kamu miliki
                         dan mendukung pembayaran QRIS. 😎
                       </Title>
-                      <QRCode value={order.qris.qr_string} />
+                      <QRCode value={order?.qris.qr_string} />
                       <Typography
                         sx={{ color: "blue", mt: "20px", fontWeight: 600 }}
                         variant="body2"
@@ -198,15 +190,15 @@ const EWalletForm = () => {
                         handleCloseEnter={handleCloseEnter}
                       />
                     </>
-                  ) : order?.paymentMethod === "ShopeePay" ? (
+                  ) : orderData.paymentMethod === "ShopeePay" ? (
                     <Title textAlign="center" sx={{ marginBottom: "8px" }}>
-                      Klik Lanjut untuk melanjutkan ke {order?.paymentMethod}{" "}
+                      Klik Lanjut untuk melanjutkan ke {orderData.paymentMethod}{" "}
                       untuk melakukan pembayaran. **Checkout ShopeePay hanya
                       bisa dilakukan melalui Smartphone.
                     </Title>
                   ) : (
                     <Title textAlign="center" sx={{ marginBottom: "8px" }}>
-                      Klik Lanjut untuk melanjutkan ke {order?.paymentMethod}{" "}
+                      Klik Lanjut untuk melanjutkan ke {orderData.paymentMethod}{" "}
                       untuk melakukan pembayaran.
                     </Title>
                   )}
@@ -237,7 +229,7 @@ const EWalletForm = () => {
                         }}
                       >
                         <NumberFormat
-                          value={order?.totalPrice}
+                          value={orderData.totalPrice || orderData.totalPrice}
                           displayType="text"
                           thousandSeparator="."
                           prefix="Rp."
@@ -252,9 +244,15 @@ const EWalletForm = () => {
                       </NominalOrderList>
                     </Grid>
 
-                    <ArrowDropDownIcon
-                      sx={{ marginTop: "5px", color: "blue" }}
-                    />
+                    {expanded ? (
+                      <ArrowDropUpIcon
+                        sx={{ marginTop: "5px", color: "blue" }}
+                      />
+                    ) : (
+                      <ArrowDropDownIcon
+                        sx={{ marginTop: "5px", color: "blue" }}
+                      />
+                    )}
 
                     <Grid textAlign="center">
                       <Divider orientation="vertical" flexItem />
@@ -267,52 +265,42 @@ const EWalletForm = () => {
                           color: "text.secondary",
                         }}
                       >
-                        {order?.category}
+                        {orderData.category || orderData.category}
                       </NominalOrderList>
                     </Grid>
-                    <DetailOrder expanded={expanded} order={order} />
+                    <DetailOrder expanded={expanded} orderData={orderData} />
                   </Grid>
-                  {order?.paymentMethod === "Ovo" ? (
-                    <Grid sx={{ paddingLeft: 2, paddingRight: 2 }}>
-                      <Skeleton
-                        variant="circular"
-                        width={35}
-                        height={35}
-                        sx={{ bgcolor: "#E59934", margin: "20px auto" }}
-                      />
-                      <Title
-                        textAlign="center"
-                        sx={{ color: "#E59934", fontWeight: 600 }}
-                      >
-                        Menunggu Pembayaran
-                      </Title>
-                      <Title textAlign="center">
-                        Kamu akan dialihkan setelah kamu menyelesaikan
-                        pembayaran di Aplikasi{" "}
-                        <strong>{order?.paymentMethod}</strong>. <br></br>
-                        **Jika tidak dialihkan setelah bayar mohon untuk refresh
-                        halaman 🙏
-                      </Title>
-                    </Grid>
+                  {orderData.paymentMethod === "Ovo" ? (
+                    <Button
+                      variant="contained"
+                      onClick={() => history.push(`/order/status/${id}`)}
+                      fullWidth
+                      sx={{
+                        borderRadius: "15px",
+                        backgroundColor: "#0F00FF",
+                        margin: "30px auto 10px",
+                      }}
+                    >
+                      Cek Status
+                    </Button>
                   ) : (
-                    order?.paymentMethod === "Qris" && (
-                      <Title
-                        textAlign="center"
-                        sx={{ margin: "20px auto 5px" }}
+                    orderData.paymentMethod === "Qris" && (
+                      <Button
+                        variant="contained"
+                        onClick={() => history.push(`/order/status/${id}`)}
+                        fullWidth
+                        sx={{
+                          borderRadius: "15px",
+                          backgroundColor: "#000",
+                          margin: "30px auto 10px",
+                          boxShadow: `rgba(0, 0, 0, 0.25) 0px 2px 8px`,
+                        }}
                       >
-                        Kamu akan dialihkan setelah kamu menyelesaikan
-                        pembayaran menggunakan metode <strong>QRIS</strong>.{" "}
-                        <br></br>
-                        **Jangan close laman ini, setelah bayar harap kembali ke
-                        halaman ini agar kamu dialihkan ke laman bukti
-                        pembayaran.
-                        <br></br>
-                        **Jika tidak dialihkan setelah bayar mohon untuk refresh
-                        halaman 🙏
-                      </Title>
+                        Cek Status
+                      </Button>
                     )
                   )}
-                  {order?.paymentMethod === "Dana" ? (
+                  {orderData.paymentMethod === "Dana" && (
                     <Button
                       href={
                         isMobile
@@ -323,15 +311,15 @@ const EWalletForm = () => {
                       fullWidth
                       sx={{
                         borderRadius: "15px",
-                        backgroundColor: "#0F00FF",
+                        backgroundColor: "#0088E4",
                         margin: "30px auto 10px",
                       }}
                     >
-                      Lanjut
+                      Lanjut ke Dana
                     </Button>
-                  ) : null}
+                  )}
 
-                  {order?.paymentMethod === "LinkAja" ? (
+                  {orderData.paymentMethod === "LinkAja" && (
                     <Button
                       href={
                         isMobile
@@ -342,14 +330,14 @@ const EWalletForm = () => {
                       fullWidth
                       sx={{
                         borderRadius: "15px",
-                        backgroundColor: "#0F00FF",
+                        backgroundColor: "red",
                         margin: "30px auto 10px",
                       }}
                     >
-                      Lanjut
+                      Lanjut LinkAja
                     </Button>
-                  ) : null}
-                  {order?.paymentMethod === "ShopeePay" ? (
+                  )}
+                  {orderData.paymentMethod === "ShopeePay" && (
                     <Button
                       href={
                         order?.ewallet?.actions.mobile_deeplink_checkout_url
@@ -359,13 +347,13 @@ const EWalletForm = () => {
                       disabled={isDesktop && true}
                       sx={{
                         borderRadius: "15px",
-                        backgroundColor: "#0F00FF",
+                        backgroundColor: "#E74B2E",
                         margin: "15px auto 20px",
                       }}
                     >
-                      Lanjut
+                      Lanjut Shopee
                     </Button>
-                  ) : null}
+                  )}
                 </Grid>
               </Grid>
             </Paper>

@@ -27,24 +27,6 @@ const GridEtalase = styled(Grid)(() => ({
   display: "flex",
 }));
 
-const initialState = {
-  playerId: "",
-  zoneId: "",
-  server: "",
-  productName: "",
-  productId: "",
-  totalPrice: "",
-  paymentMethod: "",
-  category: "",
-  emailorPhone: "",
-
-  reference_id: "",
-  amount: "",
-  channel_code: "",
-  mobile_number: "",
-  external_id: "",
-};
-
 function useIsMounted() {
   const isMounted = useRef(false);
   useEffect(() => {
@@ -57,13 +39,34 @@ function useIsMounted() {
 const Etalase = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const topupgamesku = JSON.parse(localStorage.getItem("TopupGamesku"));
   const { name } = useParams();
   const isMounted = useIsMounted();
   const timer = React.useRef();
   const { products } = useSelector((state) => state.products);
   const { category } = useSelector((state) => state.categories);
   const [state, setState] = useState("loading (4 sec)...");
-  const [productData, setProductData] = useState(initialState);
+  const [productData, setProductData] = useState(
+    topupgamesku?.category === name
+      ? topupgamesku
+      : {
+          playerId: "",
+          zoneId: "",
+          server: "",
+          category: "",
+          productName: "",
+          productId: "",
+          totalPrice: "",
+          paymentMethod: "",
+          emailorPhone: "",
+          reference_id: "",
+          amount: "",
+          channel_code: "",
+          mobile_number: "",
+          external_id: "",
+        }
+  );
+
   const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
@@ -79,7 +82,7 @@ const Etalase = () => {
       }
       return { state };
     });
-  }, [dispatch, name, isMounted, state]);
+  }, [dispatch, name, isMounted, state, productData]);
 
   if (!products) return "Belum ada produk";
 
@@ -95,6 +98,18 @@ const Etalase = () => {
     timer.current = window.setTimeout(() => {
       setLoading(false);
     }, 4200);
+
+    localStorage.setItem(
+      "TopupGamesku",
+      JSON.stringify({
+        playerId: productData.playerId,
+        zoneId: productData.zoneId,
+        server: productData.server,
+        emailorPhone: productData.emailorPhone,
+        category: productData.category,
+      })
+    );
+
     e.preventDefault();
     if (productData.channel_code !== null) {
       dispatch(EWalletsCharge({ ...productData }, history));

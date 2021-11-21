@@ -46,7 +46,7 @@ const Content = styled(CardContent)(() => ({
   padding: "0px 10px",
 }));
 
-const DetailOrder = ({ order, expanded }) => {
+const DetailOrder = ({ orderData, expanded }) => {
   return (
     <Collapse in={expanded} timeout="auto" unmountOnExit>
       <Content>
@@ -82,9 +82,9 @@ const DetailOrder = ({ order, expanded }) => {
                       <TitleDetails sx={{ color: "text.secondary" }}>
                         ID player:
                       </TitleDetails>
-                      <DetailsOrder>{order?.playerId}</DetailsOrder>
+                      <DetailsOrder>{orderData.playerId}</DetailsOrder>
                     </Grid>
-                    {order.zoneId ? (
+                    {orderData.zoneId && (
                       <Grid
                         item
                         xs={12}
@@ -94,10 +94,10 @@ const DetailOrder = ({ order, expanded }) => {
                         <TitleDetails sx={{ color: "text.secondary" }}>
                           Zone ID:
                         </TitleDetails>
-                        <DetailsOrder>{order.zoneId}</DetailsOrder>
+                        <DetailsOrder>{orderData.zoneId}</DetailsOrder>
                       </Grid>
-                    ) : null}
-                    {order.server ? (
+                    )}
+                    {orderData.server && (
                       <Grid
                         item
                         xs={12}
@@ -107,9 +107,9 @@ const DetailOrder = ({ order, expanded }) => {
                         <TitleDetails sx={{ color: "text.secondary" }}>
                           Server/Platform:
                         </TitleDetails>
-                        <DetailsOrder>{order.server}</DetailsOrder>
+                        <DetailsOrder>{orderData.server}</DetailsOrder>
                       </Grid>
-                    ) : null}
+                    )}
                     <Grid
                       item
                       xs={12}
@@ -119,7 +119,7 @@ const DetailOrder = ({ order, expanded }) => {
                       <TitleDetails sx={{ color: "text.secondary" }}>
                         Nama item:
                       </TitleDetails>
-                      <DetailsOrder>{order.productName}</DetailsOrder>
+                      <DetailsOrder>{orderData.productName}</DetailsOrder>
                     </Grid>
                     <Grid
                       item
@@ -131,9 +131,8 @@ const DetailOrder = ({ order, expanded }) => {
                         Harga item:
                       </TitleDetails>
                       <DetailsOrder>
-                        {" "}
                         <NumberFormat
-                          value={order.totalPrice}
+                          value={orderData.totalPrice}
                           displayType="text"
                           thousandSeparator="."
                           prefix="Rp."
@@ -156,7 +155,7 @@ const DetailOrder = ({ order, expanded }) => {
                       <TitleDetails sx={{ color: "text.secondary" }}>
                         Bayar pake:
                       </TitleDetails>
-                      <DetailsOrder>{order.paymentMethod}</DetailsOrder>
+                      <DetailsOrder>{orderData.paymentMethod}</DetailsOrder>
                     </Grid>
                   </Grid>
                   <Divider sx={{ color: "#1F1F1F" }} />
@@ -181,7 +180,7 @@ const DetailOrder = ({ order, expanded }) => {
                       }}
                     >
                       <NumberFormat
-                        value={order.totalPrice}
+                        value={orderData.totalPrice}
                         displayType="text"
                         thousandSeparator="."
                         prefix="Rp."

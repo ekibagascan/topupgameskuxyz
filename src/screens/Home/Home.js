@@ -26,7 +26,12 @@ const Home = () => {
   const isMounted = useIsMounted();
 
   useEffect(() => {
-    dispatch(getAllCategories());
+    dispatch(getAllCategories()).then((data) => {
+      if (isMounted.current) {
+        setState(data);
+      }
+      return { state };
+    });
     dispatch(getAllSlides()).then((data) => {
       if (isMounted.current) {
         setState(data);

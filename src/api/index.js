@@ -12,6 +12,8 @@ export const fetchProducts = (name) => API.get(`/api/products/${name}`);
 export const fetchProduct = (id) => API.get(`/api/products/product/${id}`);
 
 export const fetchOrder = (id) => API.get(`/api/orders/order/${id}`);
+export const updateOrder = (id, updatedOrder) =>
+  API.patch(`/api/orders/order/${id}`, updatedOrder);
 
 export const ewalletsCharge = (chargeData) =>
   API.post("/api/transactions/ewallets/charges", chargeData);

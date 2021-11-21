@@ -5,7 +5,7 @@ const initialState = {
   callbacks: [],
 };
 
-const orders = (state = initialState, action) => {
+const callbacks = (state = initialState, action) => {
   switch (action.type) {
     case "START_LOADING":
       return { ...state, isCallbackLoading: true };
@@ -18,4 +18,4 @@ const orders = (state = initialState, action) => {
   }
 };
 
-export default orders;
+export default callbacks;

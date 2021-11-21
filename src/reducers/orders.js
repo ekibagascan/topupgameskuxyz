@@ -1,4 +1,8 @@
-import { CREATE_ORDER, GET_ORDER } from "../constants/actionTypes";
+import {
+  CREATE_ORDER,
+  GET_ORDER,
+  UPDATE_ORDER,
+} from "../constants/actionTypes";
 
 const initialState = {
   isOrderLoading: true,
@@ -13,6 +17,13 @@ const orders = (state = initialState, action) => {
       return { ...state, isOrderLoading: false };
     case CREATE_ORDER:
       return { ...state, orders: [...state.orders, action?.payload] };
+    case UPDATE_ORDER:
+      return {
+        ...state,
+        orders: state.orders.map((order) =>
+          order._id === action.payload._id ? action.payload : order
+        ),
+      };
     case GET_ORDER:
       return { ...state, order: action?.payload.order };
     default:
