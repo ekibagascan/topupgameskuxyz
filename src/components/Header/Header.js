@@ -23,6 +23,7 @@ const MyAppBar = styled(AppBar)(({ theme }) => ({
 }));
 const Brand = styled("img")(({ theme }) => ({
   margin: "2px 20px",
+  height: 30,
   [theme.breakpoints.down("sm")]: {
     margin: "2px auto",
     height: 25,
@@ -44,6 +45,7 @@ const Header = () => {
             alt="topupgameku"
             align="center"
             height={30}
+            width={100}
           />
         </BrandContainer>
       </MyAppBar>

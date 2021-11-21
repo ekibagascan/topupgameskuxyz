@@ -234,7 +234,7 @@ const PaymentMethod = ({
                           />
                         </Price>
                         <Typography sx={{ fontSize: "0.5rem" }}>
-                          Harga sudah termasuk pajak 10%
+                          Harga termasuk pajak 10%
                         </Typography>
                       </>
                     ) : isProductLoading ? (
