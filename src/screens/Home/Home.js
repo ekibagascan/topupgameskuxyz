@@ -74,33 +74,6 @@ const Home = () => {
             categorySection="trending"
             isLoading={isCategoryLoading}
           />
-
-          {isCategoryLoading ? null : (
-            <Typography
-              variant="h6"
-              sx={{ marginBottom: "8px", marginTop: "20px" }}
-            >
-              Livestream App
-            </Typography>
-          )}
-          <GameCategory
-            categories={categories}
-            categorySection="livestream"
-            isCategoryLoading={isCategoryLoading}
-          />
-          {isCategoryLoading ? null : (
-            <Typography
-              variant="h6"
-              sx={{ marginBottom: "8px", marginTop: "20px" }}
-            >
-              Voucher Games
-            </Typography>
-          )}
-          <GameCategory
-            categories={categories}
-            categorySection="voucher"
-            isCategoryLoading={isCategoryLoading}
-          />
         </Grid>
       </Grid>
     </Container>

@@ -123,11 +123,7 @@ const GameCategory = ({ categorySection, categories, isCategoryLoading }) => {
                 <ActionArea>
                   <MyCard>
                     <Link to={`/etalase/${c?.name}`}>
-                      <Media
-                        component="img"
-                        image={`data:image/png;base64,${c.image}`}
-                        title={c?.name}
-                      />
+                      <Media component="img" image={c?.image} title={c?.name} />
                     </Link>
                   </MyCard>
                 </ActionArea>

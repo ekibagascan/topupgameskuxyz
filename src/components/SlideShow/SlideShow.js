@@ -39,7 +39,7 @@ function Slide({ slide, isSlideLoading }) {
           ) : (
             <img
               alt={slide.name}
-              src={`data:image/png;base64,${slide.image}`}
+              src={`${slide.image}?w=280&fit=crop&auto=format`}
               loading="lazy"
             />
           )}
